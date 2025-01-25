@@ -103,3 +103,12 @@ services:
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker-1:29092,broker-2:29093,broker-3:29094'
+
+  mini-app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      target: mini-app-dev
+    volumes:
+      - ./app:/opt/mini-app
+      - /opt/mini-app/node_modules
