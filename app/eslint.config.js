@@ -117,11 +117,11 @@ export default tseslint.config(
             'no-undef': 0,
         },
     },
-    // {
-    //     files: ['**/*.json'],
-    //     rules: {
-    //         'comma-dangle': ["error", "never"],
-    //         'indent': ['error', 4],
-    //     },
-    // },
+    {
+        files: ['**/*.json'],
+        rules: {
+            'comma-dangle': ["error", "never"],
+            'indent': ['error', 4],
+        },
+    },
 );
