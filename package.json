@@ -1,0 +1,13 @@
+{
+  "name": "node-kafka-mini-app",
+  "author": "Andy Maskiell <maskiella@gmail.com>",
+  "packageManager": "yarn@4.6.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "yarn": ">=4.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {}
+}
