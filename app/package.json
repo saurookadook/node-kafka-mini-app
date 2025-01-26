@@ -24,6 +24,7 @@
         "winston": "^3.17.0"
     },
     "dependencies": {
-        "@confluentinc/kafka-javascript": "^1.2.0"
+        "@confluentinc/kafka-javascript": "^1.2.0",
+        "@confluentinc/schemaregistry": "^1.1.0"
     }
 }
