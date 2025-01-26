@@ -9,3 +9,7 @@ A mini app in Node.js utilizing [Confluent's JavaScript Client for Apache Kafka]
 ## Running the App
 
 🚧 _WIP_ 🚧
+
+## References
+
+- [Confluent's JavaScript Client for Apache Kafka<sup>TM</sup>](https://github.com/confluentinc/confluent-kafka-javascript)

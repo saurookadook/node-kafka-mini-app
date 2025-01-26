@@ -18,20 +18,20 @@
         // "editor.defaultFormatter": "dbaeumer.vscode-eslint",
         // "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
         "editor.defaultFormatter": "vscode.typescript-language-features",
-        "editor.tabSize": 4
+        "editor.tabSize": 2
     },
     "[typescript]": {
         // "editor.defaultFormatter": "esbenp.prettier-vscode",
         // "editor.defaultFormatter": "dbaeumer.vscode-eslint",
         // "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
         "editor.defaultFormatter": "vscode.typescript-language-features",
-        "editor.tabSize": 4
+        "editor.tabSize": 2
     },
     "[typescriptreact]": {
         // "editor.defaultFormatter": "esbenp.prettier-vscode",
         // "editor.defaultFormatter": "dbaeumer.vscode-eslint",
         // "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
         "editor.defaultFormatter": "vscode.typescript-language-features",
-        "editor.tabSize": 4
+        "editor.tabSize": 2
     }
 }
