@@ -7,10 +7,27 @@
         "moduleResolution": "node",
         "noImplicitAny": true,
         "outDir": "./dist",
+        "paths": {
+            "#_schemas/*": [
+                "./_schemas/*"
+            ],
+            "#common/*": [
+                "./common/*"
+            ],
+            "#consumers/*": [
+                "./#consumers/*"
+            ],
+            "#producers/*": [
+                "./#producers/*"
+            ],
+            "#utils/*": [
+                "./utils/*"
+            ]
+        },
         "preserveConstEnums": true,
         "rootDir": "./src",
         "sourceMap": true,
-        "target": "es5",
+        "target": "es5"
     },
     "include": [
         "src"
