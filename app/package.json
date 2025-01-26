@@ -10,13 +10,23 @@
     },
     "scripts": {
         "build": "webpack",
+        "start:dev-base": "NODE_PATH=. nodemon --exec node --experimental-specifier-resolution=node --loader ./customTSNodeLoader.js",
+        "start:consumers:dev": "yarn start:dev-base ./src/consumers/index.ts",
+        "start:consumers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/consumers.ts",
+        "start:mini-app:dev": "yarn start:dev-base src/mini-app/index.ts",
+        "start:mini-app": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/mini-app.ts",
+        "start:producers:dev": "yarn start:dev-base ./src/producers/index.ts",
+        "start:producers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/producers.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "devDependencies": {
         "eslint": "^9.19.0",
         "globals": "^15.14.0",
+        "nodemon": "^3.1.9",
         "prettier": "^3.4.2",
+        "prettier-eslint": "^16.3.0",
         "ts-loader": "^9.5.2",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "~5.6.2",
         "typescript-eslint": "^8.21.0",
         "webpack": "^5.97.1",
@@ -25,6 +35,7 @@
     },
     "dependencies": {
         "@confluentinc/kafka-javascript": "^1.2.0",
-        "@confluentinc/schemaregistry": "^1.1.0"
+        "@confluentinc/schemaregistry": "^1.1.0",
+        "ts-node": "^10.9.2"
     }
 }

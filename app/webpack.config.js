@@ -13,10 +13,11 @@ const buildConfig = (env, argv) => ({
   devtool: 'inline-source-map',
   entry: {
     consumers: './src/consumers/index.ts',
+    'mini-app': './src/mini-app/index.ts',
     producers: './src/producers/index.ts'
   },
   output: {
-    filename: '[name]-[chunkhash].min.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   module: {

@@ -90,9 +90,10 @@ export default tseslint.config(
       sourceType: 'module',
     },
     rules: {
+      ..._rules,
       '@typescript-eslint/ban-ts-comment': 1,
       '@typescript-eslint/no-explicit-any': 1,
-      ..._rules,
+      'indent': [0, 2],
     },
   },
   {
@@ -122,11 +123,11 @@ export default tseslint.config(
       'no-undef': 0,
     },
   },
-  {
-    files: ['**/*.json'],
-    rules: {
-      'comma-dangle': ["error", "never"],
-      'indent': ['error', 4],
-    },
-  },
+  // {
+  //   files: ['**/*.json'],
+  //   rules: {
+  //     'comma-dangle': ["error", "never"],
+  //     'indent': ['error', 4],
+  //   },
+  // },
 );

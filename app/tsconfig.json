@@ -2,41 +2,48 @@
     "compilerOptions": {
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
-        "baseUrl": "./src",
+        "baseUrl": ".",
         "declaration": true,
-        "module": "es6",
+        "esModuleInterop": true,
+        "module": "esnext",
         "moduleResolution": "node",
         "noImplicitAny": true,
         "outDir": "./dist",
         "paths": {
             "@/*": [
-                "./*"
+                "./src/*"
             ],
-            "@/_schemas/*": [
-                "_schemas/*"
-            ],
-            "@/common/*": [
-                "common/*"
-            ],
-            "@/constants/*": [
-                "constants/*"
-            ],
-            "@/consumers/*": [
-                "consumers/*"
-            ],
-            "@/producers/*": [
-                "producers/*"
-            ],
-            "@/utils/*": [
-                "utils/*"
-            ]
+            // "@/_schemas/*": [
+            //     "_schemas/*"
+            // ],
+            // "@/common/*": [
+            //     "common/*"
+            // ],
+            // "@constants/*": [
+            //     "./src/constants/*"
+            // ],
+            // "@/consumers/*": [
+            //     "consumers/*"
+            // ],
+            // "@/producers/*": [
+            //     "producers/*"
+            // ],
+            // "@/utils/*": [
+            //     "utils/*"
+            // ]
         },
         "preserveConstEnums": true,
-        "rootDir": "./src",
+        "rootDir": "src",
         "sourceMap": true,
         "target": "esnext"
     },
     "include": [
-        "src"
-    ]
+        "./src/**/*"
+    ],
+    "ts-node": {
+        // "esm": true,
+        "require": [
+            "tsconfig-paths/register"
+        ]
+    }
 }
