@@ -2,6 +2,7 @@
     "compilerOptions": {
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
+        "baseUrl": "./src",
         "declaration": true,
         "module": "es6",
         "moduleResolution": "node",
@@ -9,25 +10,25 @@
         "outDir": "./dist",
         "paths": {
             "#_schemas/*": [
-                "./_schemas/*"
+                "_schemas/*"
             ],
             "#common/*": [
-                "./common/*"
+                "common/*"
             ],
             "#consumers/*": [
-                "./#consumers/*"
+                "consumers/*"
             ],
             "#producers/*": [
-                "./#producers/*"
+                "producers/*"
             ],
             "#utils/*": [
-                "./utils/*"
+                "utils/*"
             ]
         },
         "preserveConstEnums": true,
         "rootDir": "./src",
         "sourceMap": true,
-        "target": "es5"
+        "target": "esnext"
     },
     "include": [
         "src"
