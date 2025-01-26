@@ -1,6 +1,8 @@
-export enum Services {
-  CONSUMERS = 'CONSUMERS',
-  MINI_APP = 'MINI_APP',
-  PRODUCERS = 'PRODUCERS',
-  SCHEMA_REGISTRY = 'SCHEMA_REGISTRY',
-}
+export const Services = {
+  CONSUMERS: 'CONSUMERS',
+  MINI_APP: 'MINI_APP',
+  PRODUCERS: 'PRODUCERS',
+  SCHEMA_REGISTRY: 'SCHEMA_REGISTRY',
+} as const;
+
+export type ServicesKey = keyof typeof Services;

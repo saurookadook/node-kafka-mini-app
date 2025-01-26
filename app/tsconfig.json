@@ -9,19 +9,25 @@
         "noImplicitAny": true,
         "outDir": "./dist",
         "paths": {
-            "#_schemas/*": [
+            "@/*": [
+                "./*"
+            ],
+            "@/_schemas/*": [
                 "_schemas/*"
             ],
-            "#common/*": [
+            "@/common/*": [
                 "common/*"
             ],
-            "#consumers/*": [
+            "@/constants/*": [
+                "constants/*"
+            ],
+            "@/consumers/*": [
                 "consumers/*"
             ],
-            "#producers/*": [
+            "@/producers/*": [
                 "producers/*"
             ],
-            "#utils/*": [
+            "@/utils/*": [
                 "utils/*"
             ]
         },
