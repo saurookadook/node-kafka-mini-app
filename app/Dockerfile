@@ -3,11 +3,16 @@ ENV YARN_VERSION 4.6.0
 ENV yarn='corepack yarn'
 # EXPOSE 8080 9229
 WORKDIR /opt/build
-COPY ./app/package.json ./app/yarn.lock ./
+COPY ./app/.yarnrc.yml ./
+COPY ./app/customTSNodeLoader.js ./
+COPY ./app/nodemon.json ./
+COPY ./app/package.json ./
+COPY ./app/tsconfig.json ./
+COPY ./app/yarn.lock ./
 COPY ./app/src ./
 RUN $yarn install
 
-FROM node:22-bullseye AS mini-app-dev
+FROM node:22-bullseye AS build-dev
 ENV YARN_VERSION 4.6.0
 ENV yarn='corepack yarn'
 RUN useradd --uid 2000 miniapp -m
@@ -16,11 +21,12 @@ RUN chown -R miniapp:miniapp /opt/mini-app/node_modules
 USER miniapp
 WORKDIR /opt/mini-app
 COPY --from=packages-dev /opt/build/node_modules /opt/mini-app/node_modules
-ENTRYPOINT [ "yarn", "start:mini-app-dev" ]
 
+FROM build-dev AS consumers-dev
+ENTRYPOINT [ "corepack", "yarn", "start:consumers:dev" ]
 
-# FROM node:22-bullseye AS consumers
+FROM build-dev AS mini-app-dev
+ENTRYPOINT [ "corepack", "yarn", "start:mini-app:dev" ]
 
-# FROM node:22-bullseye AS producers
-
-# FROM node:22-bullseye AS mini-app
+FROM build-dev AS producers-dev
+ENTRYPOINT [ "corepack", "yarn", "start:producers:dev" ]

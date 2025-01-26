@@ -10,6 +10,9 @@ services:
       - broker-3
       - rest-proxy
       - schema-registry
+      # - consumers
+      - mini-app
+      # - producers
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.4.1
@@ -104,11 +107,29 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker-1:29092,broker-2:29093,broker-3:29094'
 
+  consumers:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      target: consumers-dev
+    volumes:
+      - ./app:/opt/mini-app
+      - /opt/mini-app/node_modules
+
   mini-app:
     build:
       context: .
       dockerfile: app/Dockerfile
       target: mini-app-dev
+    volumes:
+      - ./app:/opt/mini-app
+      - /opt/mini-app/node_modules
+
+  producers:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      target: producers-dev
     volumes:
       - ./app:/opt/mini-app
       - /opt/mini-app/node_modules

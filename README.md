@@ -6,6 +6,10 @@ A mini app in Node.js utilizing [Confluent's JavaScript Client for Apache Kafka]
 
 🚧 _WIP_ 🚧
 
+```bash
+$ docker compose build --no-cache zookeeper broker-1 broker-2 broker-3 rest-proxy schema-registry consumers mini-app producers
+```
+
 ## Running the App
 
 🚧 _WIP_ 🚧
