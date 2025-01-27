@@ -48,7 +48,14 @@ const registerSchemas = async (schemas: TopicSchemas = topicSchemas) => {
       schemaType: 'AVRO',
       schema: JSON.stringify(messageSchema),
     },
-  );
+  ).catch((e) => {
+    logger.error(`Failed to register schema for topic '${subjectName}'\n`, e);
+    return e;
+  });
+
+  if (id instanceof Error) {
+    throw id;
+  }
 
   logger.info(`Topic '${subjectName}' registration successful!`, ` ID: ${id}`);
 };
