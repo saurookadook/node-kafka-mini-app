@@ -1225,6 +1225,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kafkajs/confluent-schema-registry@npm:^3.6.1":
+  version: 3.6.1
+  resolution: "@kafkajs/confluent-schema-registry@npm:3.6.1"
+  dependencies:
+    ajv: "npm:^7.1.0"
+    avsc: "npm:>= 5.4.13 < 6"
+    mappersmith: "npm:>= 2.44.0 < 3"
+    protobufjs: "npm:>= 6.11.4 < 8"
+  checksum: 10c0/3d4e42935eaf7493bc2503e0c8fbd0dac1d7909bddee82f2ac788e863f53163830d911bc3d95ef1f1f35543581406bddf68a96566ccdd408f522e02d1a3e0d37
+  languageName: node
+  linkType: hard
+
 "@mapbox/node-pre-gyp@npm:^1.0.11":
   version: 1.0.11
   resolution: "@mapbox/node-pre-gyp@npm:1.0.11"
@@ -2514,6 +2526,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ajv@npm:^7.1.0":
+  version: 7.2.4
+  resolution: "ajv@npm:7.2.4"
+  dependencies:
+    fast-deep-equal: "npm:^3.1.1"
+    json-schema-traverse: "npm:^1.0.0"
+    require-from-string: "npm:^2.0.2"
+    uri-js: "npm:^4.2.2"
+  checksum: 10c0/420b72d7f6af89c7e63e00856b894e16a8a2ea107b2b2a76ff36d8dd05f6d708ab120a8c7cc627983ad1f75c6990363eda7c68f45943635f084de62353ca1c56
+  languageName: node
+  linkType: hard
+
 "ajv@npm:^8.0.0, ajv@npm:^8.17.1, ajv@npm:^8.9.0":
   version: 8.17.1
   resolution: "ajv@npm:8.17.1"
@@ -2664,7 +2688,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"avsc@npm:^5.7.7":
+"avsc@npm:>= 5.4.13 < 6, avsc@npm:^5.7.7":
   version: 5.7.7
   resolution: "avsc@npm:5.7.7"
   checksum: 10c0/e5ae0fe8aed2ecc89063cb663ec33c66572e5d2d05b92e3ea3f5db0616542517fbcaf0d426a58fcdc0bf6691d87d24d49433cf040839dea6c598365b3b9bc84a
@@ -4847,6 +4871,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mappersmith@npm:>= 2.44.0 < 3":
+  version: 2.44.0
+  resolution: "mappersmith@npm:2.44.0"
+  checksum: 10c0/cc542d9083a0c214e1258d1a65ba7466d4fef96a7b0e2c2f4cb733f47000657fd6941ff2c4a9eedb2d31e0134940129ffedc37c419f54e859b1b788e525a11b5
+  languageName: node
+  linkType: hard
+
 "merge-stream@npm:^2.0.0":
   version: 2.0.0
   resolution: "merge-stream@npm:2.0.0"
@@ -5144,6 +5175,7 @@ __metadata:
     "@confluentinc/kafka-javascript": "npm:^1.2.0"
     "@confluentinc/schemaregistry": "npm:^1.1.0"
     "@faker-js/faker": "npm:^9.4.0"
+    "@kafkajs/confluent-schema-registry": "npm:^3.6.1"
     eslint: "npm:^9.19.0"
     globals: "npm:^15.14.0"
     kafkajs: "npm:^2.2.4"
@@ -5564,7 +5596,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:^7.2.5, protobufjs@npm:^7.3.2":
+"protobufjs@npm:>= 6.11.4 < 8, protobufjs@npm:^7.2.5, protobufjs@npm:^7.3.2":
   version: 7.4.0
   resolution: "protobufjs@npm:7.4.0"
   dependencies:
