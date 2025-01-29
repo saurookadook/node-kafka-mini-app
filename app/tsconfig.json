@@ -35,6 +35,7 @@
         "preserveConstEnums": true,
         "rootDir": "src",
         "sourceMap": true,
+        "skipLibCheck": true,
         "target": "esnext"
     },
     "include": [

@@ -6,7 +6,13 @@ import { resolve as resolveTs } from 'ts-node/esm';
 import * as tsConfigPaths from 'tsconfig-paths';
 
 const { absoluteBaseUrl, paths } = tsConfigPaths.loadConfig();
-console.log(''.padStart(220, '='), { absoluteBaseUrl, paths }, ''.padStart(220, '='));
+console.log(
+  ''.padStart(80, '='),
+  '\n',
+  { absoluteBaseUrl, paths },
+  '\n',
+  ''.padStart(80, '='),
+);
 const matchPath = tsConfigPaths.createMatchPath(absoluteBaseUrl, paths);
 
 export function resolve(specifier, ctx, defaultResolve) {

@@ -971,6 +971,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^9.4.0":
+  version: 9.4.0
+  resolution: "@faker-js/faker@npm:9.4.0"
+  checksum: 10c0/52f242a764b506f84f0f80e8122758a4b4a82873d72e67b5ddee9d8132c33d462705b43543dd0b86b743f54daec668a1938b9e5b9d643c606a775fb48959580c
+  languageName: node
+  linkType: hard
+
 "@google-cloud/kms@npm:^4.5.0":
   version: 4.5.0
   resolution: "@google-cloud/kms@npm:4.5.0"
@@ -4625,6 +4632,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kafkajs@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "kafkajs@npm:2.2.4"
+  checksum: 10c0/6eece1f682a257955f647b6142430e87681d11bf01e9ebe0a73b4bc0653b8f970c48ba72a3b25fdbb4205cfbb36e5ef93d954b8f8c5f7767ae2b4693bdec9d88
+  languageName: node
+  linkType: hard
+
 "keyv@npm:^4.5.3, keyv@npm:^4.5.4":
   version: 4.5.4
   resolution: "keyv@npm:4.5.4"
@@ -5129,8 +5143,10 @@ __metadata:
   dependencies:
     "@confluentinc/kafka-javascript": "npm:^1.2.0"
     "@confluentinc/schemaregistry": "npm:^1.1.0"
+    "@faker-js/faker": "npm:^9.4.0"
     eslint: "npm:^9.19.0"
     globals: "npm:^15.14.0"
+    kafkajs: "npm:^2.2.4"
     nodemon: "npm:^3.1.9"
     prettier: "npm:^3.4.2"
     prettier-eslint: "npm:^16.3.0"

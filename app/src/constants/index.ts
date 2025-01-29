@@ -1,3 +1,7 @@
+export const ConsumerGroups = {
+  RANDOM_PEOPLE: 'random-people',
+};
+
 export const Services = {
   CONSUMERS: 'CONSUMERS',
   MINI_APP: 'MINI_APP',

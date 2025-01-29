@@ -13,25 +13,51 @@ type MessageSchema = {
 }
 
 type TopicSchemaItem = {
-  topicNam: string;
+  topicName: string;
   subjectName: string;
   messageSchema: MessageSchema;
 }
 
 type TopicSchemas = TopicSchemaItem[];
 
+export type PersonTopicRecord = {
+  firstName: string;
+  lastName: string;
+  age: number;
+  birthDate: number;
+}
+
+export const Topics = {
+  RANDOM_PEOPLE: {
+    topicName: 'random-people',
+    subjectName: 'random-people-value',
+  },
+};
+
 export const topicSchemas: TopicSchemas = [
   {
-    topicNam: 'test-topic',
-    subjectName: 'test-topic-value',
+    topicName: Topics.RANDOM_PEOPLE.topicName,
+    subjectName: Topics.RANDOM_PEOPLE.subjectName,
     messageSchema: {
       type: 'record',
-      namespace: 'examples',
-      name: 'RandomTest',
+      namespace: 'miniApp',
+      name: 'Person',
       fields: [
         {
-          name: 'fullName',
+          name: 'firstName',
           type: 'string',
+        },
+        {
+          name: 'lastName',
+          type: 'string',
+        },
+        {
+          name: 'age',
+          type: 'int',
+        },
+        {
+          name: 'birthDate',
+          type: 'int', // Unix timestamp
         },
       ],
     },

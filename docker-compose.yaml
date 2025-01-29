@@ -4,15 +4,27 @@ services:
     command: sh -C "echo start"
     platform: linux/amd64
     depends_on:
+      # - consumers
+      # - producers
+      - mini-app
+      # - zookeeper
+      # - broker-1
+      # - broker-2
+      # - broker-3
+      # - rest-proxy
+      # - schema-registry
+
+  all-kafka:
+    image: alpine
+    command: sh -C "echo start"
+    platform: linux/amd64
+    depends_on:
       - zookeeper
       - broker-1
       - broker-2
       - broker-3
       - rest-proxy
       - schema-registry
-      # - consumers
-      - mini-app
-      # - producers
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.8.0
@@ -121,6 +133,8 @@ services:
       context: .
       dockerfile: app/Dockerfile
       target: mini-app-dev
+    depends_on:
+      - schema-registry
     volumes:
       - ./app:/opt/mini-app
       - /opt/mini-app/node_modules
