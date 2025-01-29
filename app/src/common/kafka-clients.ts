@@ -1,4 +1,7 @@
 import { Kafka, KafkaConfig, Producer, ProducerConfig } from 'kafkajs';
+import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
+import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-registry/dist/@types';
+import { SchemaRegistryAPIClientArgs } from '@kafkajs/confluent-schema-registry/dist/api';
 import { KafkaJS } from '@confluentinc/kafka-javascript';
 import { SchemaRegistryClient } from '@confluentinc/schemaregistry';
 
@@ -59,5 +62,42 @@ const schemaRegistry = new SchemaRegistryClient({
       ...serverURLs.schemaRegistry,
 ],
 });
+
+export interface MiniAppSchemaRegistry extends SchemaRegistry {
+  getLatestCachedSchemaId: (topicName: string) => Promise<number>;
+}
+
+let schemaRegistrySingleton: MiniAppSchemaRegistry;
+
+export async function getMiniAppSchemaRegistry(
+  schemaRegistryConfig?: SchemaRegistryAPIClientArgs,
+) {
+  const config = await getConfig();
+
+  if (schemaRegistrySingleton == null) {
+    schemaRegistrySingleton = createMiniAppSchemaRegistry({
+      host: config.schemaRegistryHost,
+      ...schemaRegistryConfig,
+    });
+  }
+
+  return schemaRegistrySingleton;
+}
+
+export function createMiniAppSchemaRegistry(
+  schemaRegistryConfig: SchemaRegistryAPIClientArgs,
+  options?: SchemaRegistryAPIClientOptions,
+): MiniAppSchemaRegistry {
+  const schemaRegistry = new SchemaRegistry(schemaRegistryConfig, options);
+
+  async function getLatestCachedSchemaId(topicName: string): Promise<number> {
+    // TODO: implement me :D
+    return schemaRegistry.getLatestSchemaId(topicName);
+  }
+
+  return Object.assign(schemaRegistry, {
+    getLatestCachedSchemaId,
+  });
+}
 
 export { kafkaClient, schemaRegistry };
