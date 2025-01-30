@@ -1,9 +1,16 @@
-import { Kafka, KafkaConfig, Producer, ProducerConfig } from 'kafkajs';
+import {
+  Consumer,
+  ConsumerConfig,
+  Kafka,
+  KafkaConfig,
+  Producer,
+  ProducerConfig,
+} from 'kafkajs';
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-registry/dist/@types';
 import { SchemaRegistryAPIClientArgs } from '@kafkajs/confluent-schema-registry/dist/api';
-import { KafkaJS } from '@confluentinc/kafka-javascript';
-import { SchemaRegistryClient } from '@confluentinc/schemaregistry';
+// import { KafkaJS } from '@confluentinc/kafka-javascript';
+// import { SchemaRegistryClient } from '@confluentinc/schemaregistry';
 
 const serverURLs = {
   brokers: [
@@ -13,6 +20,22 @@ const serverURLs = {
   ],
   schemaRegistry: ['http://schema-registry:8081'],
 };
+
+// export const kafkaClient = new KafkaJS.Kafka({
+//     kafkaJS: {
+//         brokers: [
+//           // 'localhost:9092'
+//           ...serverURLs.brokers,
+//         ],
+//     },
+// });
+
+// export const schemaRegistry = new SchemaRegistryClient({
+//   baseURLs: [
+//     // 'http://localhost:8081'
+//     ...serverURLs.schemaRegistry,
+// ],
+// });
 
 export type Config = {
   kafkaEnvConfig: Pick<KafkaConfig, 'brokers'>;
@@ -35,33 +58,38 @@ export async function getConfig(): Promise<Config> {
   return currentConfig;
 }
 
-const kafkaClient = new KafkaJS.Kafka({
-    kafkaJS: {
-        brokers: [
-          // 'localhost:9092'
-          ...serverURLs.brokers,
-        ],
-    },
-});
-
-export async function getKafkaClient({
-  producerConfig,
-}: {
-  producerConfig?: ProducerConfig;
-}) {
+export async function getKafkaClient() {
   const config = await getConfig();
   const kafka: Kafka = new Kafka({
     clientId: 'mini-app',
     ...config.kafkaEnvConfig,
   });
+
+  return kafka;
 }
 
-const schemaRegistry = new SchemaRegistryClient({
-    baseURLs: [
-      // 'http://localhost:8081'
-      ...serverURLs.schemaRegistry,
-],
-});
+export async function getMiniAppKafkaProducer({
+  producerConfig,
+}: {
+  producerConfig?: ProducerConfig;
+}): Promise<Producer> {
+  const kafkaClient = await getKafkaClient();
+  return kafkaClient.producer(producerConfig);
+}
+
+export async function getMiniAppKafkaConsumer({
+  consumerConfig,
+  groupId,
+}: {
+  consumerConfig: ConsumerConfig;
+  groupId: string;
+}): Promise<Consumer> {
+  const kafkaClient = await getKafkaClient();
+  return kafkaClient.consumer({
+    ...consumerConfig,
+    groupId: groupId,
+  });
+}
 
 export interface MiniAppSchemaRegistry extends SchemaRegistry {
   getLatestCachedSchemaId: (topicName: string) => Promise<number>;
@@ -84,20 +112,60 @@ export async function getMiniAppSchemaRegistry(
   return schemaRegistrySingleton;
 }
 
+type CacheValue = {
+  latest: number;
+  nextUpdate: number;
+}
+type SchemaIdCache = {
+  [topicName: string]: CacheValue;
+};
+
+function updateCacheAndGetLatest({
+  cacheObj,
+  topicName,
+  latestVal,
+}: {
+  cacheObj: SchemaIdCache;
+  topicName: string;
+  latestVal: number;
+}) {
+  cacheObj[topicName] = {
+    latest: latestVal,
+    nextUpdate: Date.now() + 1000 * 60, // 60 seconds
+  };
+
+  return latestVal;
+}
+
 export function createMiniAppSchemaRegistry(
   schemaRegistryConfig: SchemaRegistryAPIClientArgs,
   options?: SchemaRegistryAPIClientOptions,
 ): MiniAppSchemaRegistry {
   const schemaRegistry = new SchemaRegistry(schemaRegistryConfig, options);
+  const schemaIdCache: SchemaIdCache = {};
 
   async function getLatestCachedSchemaId(topicName: string): Promise<number> {
-    // TODO: implement me :D
-    return schemaRegistry.getLatestSchemaId(topicName);
+    if (schemaIdCache[topicName] == null) {
+      return schemaRegistry.getLatestSchemaId(topicName).then((latestId) => {
+        return updateCacheAndGetLatest({
+          cacheObj: schemaIdCache,
+          topicName,
+          latestVal: latestId,
+        });
+      });
+    } else if (schemaIdCache[topicName].nextUpdate < Date.now()) {
+      return schemaRegistry.getLatestSchemaId(topicName).then((latestId) => {
+        return updateCacheAndGetLatest({
+          cacheObj: schemaIdCache,
+          topicName,
+          latestVal: latestId,
+        });
+      });
+    }
+    return schemaIdCache[topicName].latest;
   }
 
   return Object.assign(schemaRegistry, {
     getLatestCachedSchemaId,
   });
 }
-
-export { kafkaClient, schemaRegistry };
