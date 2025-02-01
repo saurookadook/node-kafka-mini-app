@@ -1,6 +1,11 @@
 // import * as path from 'node:path';
-import { schemaRegistry } from '@/common/kafka-clients';
+import {
+  getMiniAppSchemaRegistry,
+  // schemaRegistry
+} from '@/common/kafka-clients';
 import logger from '@/utils/logger';
+import { SchemaType } from '@kafkajs/confluent-schema-registry';
+import { AvroConfluentSchema, RawAvroSchema } from '@kafkajs/confluent-schema-registry/dist/@types';
 
 type MessageSchema = {
   type: string;
@@ -64,26 +69,50 @@ export const topicSchemas: TopicSchemas = [
   },
 ];
 
-const registerSchemas = async (schemas: TopicSchemas = topicSchemas) => {
+export const registerSchemas = async (schemas: TopicSchemas = topicSchemas) => {
   const { subjectName, messageSchema } = schemas[0];
 
   logger.info(`Registering schema for topic '${subjectName}'`);
-  const id = await schemaRegistry.register(
-    subjectName,
-    {
-      schemaType: 'AVRO',
-      schema: JSON.stringify(messageSchema),
-    },
-  ).catch((e) => {
-    logger.error(`Failed to register schema for topic '${subjectName}'\n`, e);
-    return e;
-  });
+  // const id = await schemaRegistry.register(
+  //   subjectName,
+  //   {
+  //     schemaType: 'AVRO',
+  //     schema: JSON.stringify(messageSchema),
+  //   },
+  // ).catch((e) => {
+  //   logger.error(`Failed to register schema for topic '${subjectName}'\n`, e);
+  //   return e;
+  // });
 
-  if (id instanceof Error) {
-    throw id;
+  // if (id instanceof Error) {
+  //   throw id;
+  // }
+
+  try {
+    const miniAppSchemaRegistry = await getMiniAppSchemaRegistry();
+    const registerArgs: [RawAvroSchema | AvroConfluentSchema, { subject: string }] = [
+      { type: SchemaType.AVRO,
+        schema: JSON.stringify(messageSchema),
+      },
+      {
+        subject: subjectName,
+      },
+    ];
+    const id = await miniAppSchemaRegistry
+      .register(...registerArgs)
+      .catch((e) => {
+        logger.error(`[miniAppSchemaRegistry.register] Failed to register schema for topic '${subjectName}'\n`, e);
+        return e;
+      });
+
+      if (id instanceof Error) {
+        throw id;
+      }
+
+      logger.info(`Topic '${subjectName}' registration successful!`, ` ID: ${id}`);
+  } catch (error) {
+    logger.error(`[registerSchemas] Failed while registering schemas: \n`, error);
   }
-
-  logger.info(`Topic '${subjectName}' registration successful!`, ` ID: ${id}`);
 };
 
 export default registerSchemas;
