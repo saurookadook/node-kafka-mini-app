@@ -1,6 +1,6 @@
 # `node-kafka-mini-app`
 
-A mini app in Node.js utilizing [Confluent's JavaScript Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-javascript) and PostgreSQL via [Postgres.js](https://github.com/porsager/postgres) _(maybe...?)_
+A mini app in Node.js utilizing [KafkaJS](https://kafka.js.org/docs/getting-started) and PostgreSQL via [Postgres.js](https://github.com/porsager/postgres) _(maybe...?)_
 
 ## Installation
 
@@ -16,4 +16,5 @@ $ docker compose build --no-cache zookeeper broker-1 broker-2 broker-3 rest-prox
 
 ## References
 
+- [Confluent's JavaScript Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-javascript)
 - [Confluent's JavaScript Client for Apache Kafka<sup>TM</sup>](https://github.com/confluentinc/confluent-kafka-javascript)

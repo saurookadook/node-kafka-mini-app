@@ -1,66 +1,65 @@
-import { AvroDeserializer, SerdeType } from '@confluentinc/schemaregistry';
-import winston from 'winston';
+import { Consumer, EachMessagePayload } from 'kafkajs';
+// eslint-disable-next-line
+import util from 'node:util';
 
 import { topicSchemas } from '@/_schemas/register-schemas';
-import { kafkaClient, schemaRegistry } from '@/common/kafka-clients';
+import { getMiniAppKafkaConsumer } from '@/common/kafka-clients';
 import { ConsumerGroups, Services } from '@/constants';
+import { loggers, spacer } from '@/utils';
 
-const consumersLogger = winston.loggers.get(Services.CONSUMERS);
+const consumersLogger = loggers.get(Services.CONSUMERS);
 
 const personTopicSchema = topicSchemas[0];
+let consumer: Consumer = null;
 
-let consumer = kafkaClient.consumer({
-  kafkaJS: {
-    groupId: ConsumerGroups.RANDOM_PEOPLE,
-    fromBeginning: true,
-  },
-});
-
-// async function main() {
-const main = async () => {
+// TODO: Move this to utils
+function logInfoWithNewlines(message: string) {
   consumersLogger.info('\n');
-  consumersLogger.info('    consumers - main    '.padStart(80, '='),
-    // .padEnd(180, '=')
-  );
+  consumersLogger.info(message);
   consumersLogger.info('\n');
+}
 
-  consumersLogger.info('    Starting consumers...',
-    // .padStart(100, '-')
-  );
-  const avroDeserializer = new AvroDeserializer(schemaRegistry, SerdeType.VALUE, {});
+async function consumersMain() {
+  try {
+    consumer = await getMiniAppKafkaConsumer({
+      groupId: `${ConsumerGroups.RANDOM_PEOPLE}-group`,
+    });
 
-  await consumer.connect();
-  await consumer.subscribe({ topic: personTopicSchema.topicName });
+    logInfoWithNewlines('    consumers - main    '.padStart(80, '='));
+    logInfoWithNewlines(`${spacer}Starting consumers...`);
 
-  let messageReceived = false;
-  consumersLogger.info('    Waiting for messages...',
-    // .padStart(100, '-')
-  );
-  await consumer.run({
-    eachMessage: async ({ message }) => {
-      const recordValue =
-        await avroDeserializer.deserialize(personTopicSchema.topicName, message.value);
-      const decodedMessage = {
-        ...message,
-        value: recordValue,
-      };
-      consumersLogger.info(
-        `Consumer received message.\nBefore decoding: ${JSON.stringify(message)}` +
-        `\nAfter decoding: ${JSON.stringify(decodedMessage)}`,
-      );
-      messageReceived = true;
-    },
-  });
+    await consumer.connect();
+    await consumer.subscribe({
+      fromBeginning: true,
+      topic: personTopicSchema.topicName,
+    });
 
-  while(!messageReceived) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    logInfoWithNewlines('    Waiting for messages...'.padStart(80, '?'));
+
+    await consumer.run({
+      eachMessage: async ({ message, partition, topic }: EachMessagePayload) => {
+        logInfoWithNewlines(`    Consumer received message!    `.padStart(60, '-').padEnd(120, '-'));
+        consumersLogger.info(`TOPIC : ${topic} [PARTITION : ${partition} | OFFSET : ${message.offset}] / ${message.timestamp}`);
+        // logInfoWithNewlines('    Full message:    '.padStart(60, '|').padEnd(120, '|'));
+        // consumersLogger.info(util.inspect(message, { colors: true, depth: 2 }));
+        logInfoWithNewlines(`Message value: ${message.value.toString()}`);
+      },
+    });
+  } catch (e) {
+    consumersLogger.error(`   ERROR in main    `.padStart(60, '!').padEnd(120, '!'));
+    consumersLogger.error(e);
+
+    if (consumer != null && typeof consumer.disconnect === 'function') {
+      await consumer.disconnect();
+    }
+    consumer = null;
+
+    throw e;
   }
-
-  await consumer.disconnect();
-  consumer = null;
 };
 
-main().catch(async (e) => {
+consumersMain().catch(async (e) => {
+  consumersLogger.error('    SOMETHING WENT BOOM    '.padStart(50, '!').padEnd(75, '!'));
   consumersLogger.error(e);
 
   if (consumer != null) {
@@ -69,4 +68,31 @@ main().catch(async (e) => {
 
   consumersLogger.info(''.padStart(110, '='));
   process.exit(1);
+});
+
+const errorTypes = ['unhandledRejection', 'uncaughtException'];
+const signalTraps = ['SIGTERM', 'SIGINT', 'SIGUSR2'];
+
+errorTypes.forEach((type) => {
+  process.on(type, async (e) => {
+    try {
+      consumersLogger.error(`process.on ${type}`);
+      consumersLogger.error(e);
+      await consumer.disconnect();
+      process.exit(0);
+    } catch (e) {
+      consumersLogger.error(e);
+      process.exit(1);
+    }
+  });
+});
+
+signalTraps.forEach((type) => {
+  process.once(type, async () => {
+    try {
+      await consumer.disconnect();
+    } finally {
+      process.kill(process.pid, type);
+    }
+  });
 });
