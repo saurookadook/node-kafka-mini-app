@@ -27,7 +27,7 @@ const createWinstonLoggerOptions = ({
 }: LoggerOptionsArgs & LoggerOptions) => ({
   defaultMeta: { service: 'node-kafka-mini-app' },
   format: consoleFormat(labelName),
-  level: 'info',
+  // level: 'info',
   transports: [
     new transports.Console({
       format: consoleFormat(labelName),
@@ -43,6 +43,11 @@ const logger = winston.createLogger(createWinstonLoggerOptions({ labelName: 'roo
 for (const key in Services) {
   winston.loggers.add(Services[key as ServicesKey], {
     ...createWinstonLoggerOptions({ labelName: key }),
+    transports: [
+      new transports.Console({
+        format: consoleFormat(key),
+      }),
+    ],
   });
 }
 
@@ -56,4 +61,7 @@ for (const key in Services) {
 //   }));
 // }
 
+const { loggers } = winston;
+
+export { logger as rootLogger, loggers };
 export default logger;

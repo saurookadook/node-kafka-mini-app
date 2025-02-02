@@ -9,8 +9,11 @@ import {
 import { SchemaRegistry } from '@kafkajs/confluent-schema-registry';
 import { SchemaRegistryAPIClientOptions } from '@kafkajs/confluent-schema-registry/dist/@types';
 import { SchemaRegistryAPIClientArgs } from '@kafkajs/confluent-schema-registry/dist/api';
-// import { KafkaJS } from '@confluentinc/kafka-javascript';
-// import { SchemaRegistryClient } from '@confluentinc/schemaregistry';
+
+import { Services } from '@/constants';
+import { loggers } from '@/utils';
+
+const miniAppLogger = loggers.get(Services.MINI_APP);
 
 const serverURLs = {
   brokers: [
@@ -18,24 +21,10 @@ const serverURLs = {
     'broker-2:9093',
     'broker-3:9094',
   ],
-  schemaRegistry: ['http://schema-registry:8081'],
+  schemaRegistry: [
+    'http://schema-registry:8081',
+    ],
 };
-
-// export const kafkaClient = new KafkaJS.Kafka({
-//     kafkaJS: {
-//         brokers: [
-//           // 'localhost:9092'
-//           ...serverURLs.brokers,
-//         ],
-//     },
-// });
-
-// export const schemaRegistry = new SchemaRegistryClient({
-//   baseURLs: [
-//     // 'http://localhost:8081'
-//     ...serverURLs.schemaRegistry,
-// ],
-// });
 
 export type Config = {
   kafkaEnvConfig: Pick<KafkaConfig, 'brokers'>;
@@ -60,6 +49,8 @@ export async function getConfig(): Promise<Config> {
 
 export async function getKafkaClient() {
   const config = await getConfig();
+  miniAppLogger.info('[getKafkaClient] initializing Kafka client with brokers: ');
+  miniAppLogger.info(JSON.stringify({ brokers: serverURLs.brokers }, null, 4));
   const kafka: Kafka = new Kafka({
     clientId: 'mini-app',
     ...config.kafkaEnvConfig,
@@ -72,7 +63,7 @@ export async function getMiniAppKafkaProducer({
   producerConfig,
 }: {
   producerConfig?: ProducerConfig;
-}): Promise<Producer> {
+} = {}): Promise<Producer> {
   const kafkaClient = await getKafkaClient();
   return kafkaClient.producer(producerConfig);
 }

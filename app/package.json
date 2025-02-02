@@ -10,7 +10,7 @@
     },
     "scripts": {
         "build": "webpack",
-        "start:dev-base": "NODE_PATH=. nodemon --exec node --experimental-specifier-resolution=node --loader ./customTSNodeLoader.js",
+        "start:dev-base": "NODE_PATH=. nodemon -e ts,json --exec node --experimental-specifier-resolution=node --loader ./customTSNodeLoader.js",
         "start:consumers:dev": "yarn start:dev-base ./src/consumers/index.ts",
         "start:consumers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/consumers.ts",
         "start:mini-app:dev": "yarn start:dev-base src/mini-app/index.ts",

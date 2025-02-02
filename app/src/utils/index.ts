@@ -1,3 +1,1 @@
-import logger from '@/utils/logger';
-
-export { logger };
+export * from '@/utils/logger';

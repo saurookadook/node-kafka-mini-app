@@ -19,10 +19,11 @@ services:
     command: sh -C "echo start"
     platform: linux/amd64
     depends_on:
-      - zookeeper
-      - broker-1
-      - broker-2
-      - broker-3
+      # - zookeeper
+      # - kafka-broker-1
+      # - broker-1
+      # - broker-2
+      # - broker-3
       - rest-proxy
       - schema-registry
 
@@ -31,8 +32,8 @@ services:
     ports:
       - "2181:2181"
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_CLIENT_PORT: '2181'
+      ZOOKEEPER_TICK_TIME: '2000'
 
   broker-1:
     image: confluentinc/cp-kafka:7.8.0
@@ -44,10 +45,12 @@ services:
       - 9092:9092
       - 29092:29092
     environment:
+      KAFKA_ADVERTISED_HOST_NAME: broker-1
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_IN_NETWORK:PLAINTEXT,LISTENER_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_IN_NETWORK://broker-1:29092,LISTENER_HOST://localhost:9092
+      # KFAKA_LISTENERS: LISTENER_IN_NETWORK://0.0.0.0:9092,LISTENER_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_IN_NETWORK://broker-1:29092,LISTENER_HOST://broker-1:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_IN_NETWORK
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
@@ -62,10 +65,12 @@ services:
       - 9093:9093
       - 29093:29093
     environment:
+      KAFKA_ADVERTISED_HOST_NAME: broker-2
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_IN_NETWORK:PLAINTEXT,LISTENER_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_IN_NETWORK://broker-2:29093,LISTENER_HOST://localhost:9093
+      # KFAKA_LISTENERS: LISTENER_IN_NETWORK://0.0.0.0:9093,LISTENER_HOST://0.0.0.0:29093
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_IN_NETWORK://broker-2:29093,LISTENER_HOST://broker-2:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_IN_NETWORK
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
@@ -80,36 +85,35 @@ services:
       - 9094:9094
       - 29094:29094
     environment:
+      KAFKA_ADVERTISED_HOST_NAME: broker-3
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_IN_NETWORK:PLAINTEXT,LISTENER_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_IN_NETWORK://broker-3:29094,LISTENER_HOST://localhost:9094
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_IN_NETWORK://broker-3:29094,LISTENER_HOST://broker-3:9094
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_IN_NETWORK
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
   rest-proxy:
     image: confluentinc/cp-kafka-rest:7.8.0
-    ports:
-      - "8082:8082"
+    hostname: rest-proxy
+    container_name: rest-proxy
     depends_on:
-      - zookeeper
       - broker-1
       - broker-2
       - broker-3
-    hostname: rest-proxy
-    container_name: rest-proxy
+    ports:
+      - "8082:8082"
     environment:
       KAFKA_REST_HOST_NAME: rest-proxy
       KAFKA_REST_BOOTSTRAP_SERVERS: 'broker-1:29092,broker-2:29093,broker-3:29094'
-      KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
+      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
 
   schema-registry:
     image: confluentinc/cp-schema-registry:7.8.0
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
-      - zookeeper
       - broker-1
       - broker-2
       - broker-3
@@ -118,12 +122,22 @@ services:
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker-1:29092,broker-2:29093,broker-3:29094'
+      # SCHEMA_REGISTRY_LISTENERS: https://0.0.0.0:8081
+      # SCHEMA_REGISTRY_SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL: "https"
+      # SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
+      # SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
+      # SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: 2
 
   consumers:
     build:
       context: .
       dockerfile: app/Dockerfile
       target: consumers-dev
+    depends_on:
+      - rest-proxy
+      - schema-registry
+    ports:
+      - 9339:9339
     volumes:
       - ./app:/opt/mini-app
       - /opt/mini-app/node_modules
@@ -134,7 +148,10 @@ services:
       dockerfile: app/Dockerfile
       target: mini-app-dev
     depends_on:
+      - rest-proxy
       - schema-registry
+    ports:
+      - 9337:9337
     volumes:
       - ./app:/opt/mini-app
       - /opt/mini-app/node_modules
@@ -144,6 +161,11 @@ services:
       context: .
       dockerfile: app/Dockerfile
       target: producers-dev
+    depends_on:
+      - rest-proxy
+      - schema-registry
+    ports:
+      - 9338:9338
     volumes:
       - ./app:/opt/mini-app
       - /opt/mini-app/node_modules
