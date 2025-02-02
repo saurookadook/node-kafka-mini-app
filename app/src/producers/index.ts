@@ -1,16 +1,24 @@
 import util from 'node:util';
-import { faker } from '@faker-js/faker';
+import { Producer } from 'kafkajs';
 import winston from 'winston';
+import { faker } from '@faker-js/faker';
 
 import { topicSchemas, type PersonTopicRecord } from '@/_schemas/register-schemas';
-import { getKafkaClient } from '@/common/kafka-clients';
+import { getMiniAppKafkaProducer } from '@/common/kafka-clients';
 import { Services } from '@/constants';
-import { Producer } from 'kafkajs';
 
 const producersLogger = winston.loggers.get(Services.PRODUCERS);
 
 const personTopicSchema = topicSchemas[0];
 let producer: Producer = null;
+
+const spacer = ''.padStart(24, ' ');
+
+function logInfoWithNewlines(message: string) {
+  producersLogger.info('\n');
+  producersLogger.info(message);
+  producersLogger.info('\n');
+}
 
 function generateRandomPerson(): PersonTopicRecord {
   const birthDateAsNegativeInt = faker.date.birthdate().getTime();
@@ -26,64 +34,63 @@ const between0And5SecondsInMilli = () => (Math.random() * 5) * 1000;
 
 async function randomDelay() {
   return new Promise((resolve) => {
+    const delayMs = between0And5SecondsInMilli();
+
+    logInfoWithNewlines(`${spacer}Random delay of ${delayMs / 1000} seconds...`);
+
     setTimeout(() => {
       resolve(true);
-    }, between0And5SecondsInMilli());
+    }, delayMs);
   });
 }
 
 async function intermittentlyProduceMessages() {
-  producersLogger.info(`begin - intermittentlyProduceMessages @ ${Date.now()}`);
+  logInfoWithNewlines(`    begin - intermittentlyProduceMessages @ ${Date.now()}`.padStart(100, '-'));
   const recordKey = global.crypto.randomUUID();
-  producersLogger.info(`recordKey: ${recordKey}`);
+  logInfoWithNewlines(`recordKey: ${recordKey}`);
   const personRecord = generateRandomPerson();
   producersLogger.info(util.inspect(personRecord, { colors: true, depth: null }));
 
   const outgoingMessage = {
-    // key: recordKey,
+    key: recordKey,
     value: JSON.stringify(personRecord),
   };
 
-  producersLogger.info(`Producing message for key '${recordKey}'...`);
+  logInfoWithNewlines(`    Producing message for key '${recordKey}'...`.padStart(100, '?'));
   await producer.send({
     topic: personTopicSchema.topicName,
     messages: [outgoingMessage],
   });
-  producersLogger.info(`Success! Produced message for key '${recordKey}' :D`);
+  logInfoWithNewlines(`    Success! Produced message for key '${recordKey}' :D`.padStart(100, '!'));
 
   await randomDelay();
 
-  // return intermittentlyProduceMessages();
   return outgoingMessage;
 }
 
-// async function main() {
-const main = async () => {
-  const kafkaClient = await getKafkaClient();
-  producer = kafkaClient.producer();
+async function main() {
+  producer = await getMiniAppKafkaProducer();
 
-  producersLogger.info('\n');
-  producersLogger.info('    producers - main    '.padStart(80, '='),
-    // .padEnd(180, '=')
-  );
-  producersLogger.info('\n');
+  logInfoWithNewlines('    producers - main    '.padStart(80, '='));
 
-  producersLogger.info('    Starting producers...',
-    // .padStart(100, '-')
-  );
-  await producer.connect();
-
-  try {
-    await intermittentlyProduceMessages();
-  } catch (e) {
-    producersLogger.error('    Error during producing    '.padStart(50, '!').padEnd(75, '!'));
+  logInfoWithNewlines(`${spacer}Starting producers...`);
+  await producer.connect().catch((e) => {
+    producersLogger.error('    ERROR opening producer connection    '.padStart(60, '!').padEnd(120, '!'));
     producersLogger.error(e);
-    producer.disconnect();
-    producer = null;
+  });
+
+  while(producer != null) {
+    try {
+      await intermittentlyProduceMessages();
+    } catch (e) {
+      producersLogger.error('    Error during producing    '.padStart(50, '!').padEnd(75, '!'));
+      producersLogger.error(e);
+      producer.disconnect();
+      producer = null;
+    }
   }
-  producersLogger.info('    Producers shutting down...',
-    // .padStart(100, '-')
-  );
+
+  logInfoWithNewlines(`    Producers shutting down...`.padStart(60, '=').padEnd(120, '='));
 };
 
 main().catch(async (e) => {
