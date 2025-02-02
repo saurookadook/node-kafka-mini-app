@@ -1,19 +1,18 @@
 import util from 'node:util';
 import { Producer } from 'kafkajs';
-import winston from 'winston';
 import { faker } from '@faker-js/faker';
 
 import { topicSchemas, type PersonTopicRecord } from '@/_schemas/register-schemas';
 import { getMiniAppKafkaProducer } from '@/common/kafka-clients';
 import { Services } from '@/constants';
+import { loggers, spacer } from '@/utils';
 
-const producersLogger = winston.loggers.get(Services.PRODUCERS);
+const producersLogger = loggers.get(Services.PRODUCERS);
 
 const personTopicSchema = topicSchemas[0];
 let producer: Producer = null;
 
-const spacer = ''.padStart(24, ' ');
-
+// TODO: Move this to utils
 function logInfoWithNewlines(message: string) {
   producersLogger.info('\n');
   producersLogger.info(message);
@@ -68,12 +67,12 @@ async function intermittentlyProduceMessages() {
   return outgoingMessage;
 }
 
-async function main() {
+async function producersMain() {
   producer = await getMiniAppKafkaProducer();
 
   logInfoWithNewlines('    producers - main    '.padStart(80, '='));
-
   logInfoWithNewlines(`${spacer}Starting producers...`);
+
   await producer.connect().catch((e) => {
     producersLogger.error('    ERROR opening producer connection    '.padStart(60, '!').padEnd(120, '!'));
     producersLogger.error(e);
@@ -93,7 +92,7 @@ async function main() {
   logInfoWithNewlines(`    Producers shutting down...`.padStart(60, '=').padEnd(120, '='));
 };
 
-main().catch(async (e) => {
+producersMain().catch(async (e) => {
   producersLogger.error('    SOMETHING WENT BOOM    '.padStart(50, '!').padEnd(75, '!'));
   producersLogger.error(e);
 
