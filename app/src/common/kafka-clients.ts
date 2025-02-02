@@ -72,7 +72,7 @@ export async function getMiniAppKafkaConsumer({
   consumerConfig,
   groupId,
 }: {
-  consumerConfig: ConsumerConfig;
+  consumerConfig?: ConsumerConfig;
   groupId: string;
 }): Promise<Consumer> {
   const kafkaClient = await getKafkaClient();

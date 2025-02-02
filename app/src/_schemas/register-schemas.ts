@@ -1,11 +1,10 @@
 // import * as path from 'node:path';
-import {
-  getMiniAppSchemaRegistry,
-  // schemaRegistry
-} from '@/common/kafka-clients';
-import logger from '@/utils/logger';
 import { SchemaType } from '@kafkajs/confluent-schema-registry';
 import { AvroConfluentSchema, RawAvroSchema } from '@kafkajs/confluent-schema-registry/dist/@types';
+
+import { getMiniAppSchemaRegistry } from '@/common/kafka-clients';
+import { ConsumerGroups } from '@/constants';
+import logger from '@/utils/logger';
 
 type MessageSchema = {
   type: string;
@@ -34,8 +33,8 @@ export type PersonTopicRecord = {
 
 export const Topics = {
   RANDOM_PEOPLE: {
-    topicName: 'random-people',
-    subjectName: 'random-people-value',
+    topicName: ConsumerGroups.RANDOM_PEOPLE,
+    subjectName: `${ConsumerGroups.RANDOM_PEOPLE}-value`,
   },
 };
 

@@ -63,5 +63,7 @@ for (const key in Services) {
 
 const { loggers } = winston;
 
-export { logger as rootLogger, loggers };
+const spacer = ''.padStart(24, ' ');
+
+export { logger as rootLogger, loggers, spacer };
 export default logger;

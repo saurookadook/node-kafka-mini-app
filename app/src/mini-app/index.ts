@@ -1,10 +1,8 @@
-import winston from 'winston';
-
 import registerSchemas from '@/_schemas/register-schemas';
 import { Services } from '@/constants';
-import '@/utils/logger';
+import { loggers } from '@/utils';
 
-const miniAppLogger = winston.loggers.get(Services.MINI_APP);
+const miniAppLogger = loggers.get(Services.MINI_APP);
 
 async function main() {
   console.log('\n');
