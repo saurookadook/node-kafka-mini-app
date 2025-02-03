@@ -5,7 +5,7 @@ import util from 'node:util';
 import { topicSchemas } from '@/_schemas/register-schemas';
 import { getMiniAppKafkaConsumer } from '@/common/kafka-clients';
 import { ConsumerGroups, Services } from '@/constants';
-import { loggers, spacer } from '@/utils';
+import { fullW, halfW, loggers, spacer } from '@/utils';
 
 const consumersLogger = loggers.get(Services.CONSUMERS);
 
@@ -25,7 +25,7 @@ async function consumersMain() {
       groupId: `${ConsumerGroups.RANDOM_PEOPLE}-group`,
     });
 
-    logInfoWithNewlines('    consumers - main    '.padStart(80, '='));
+    logInfoWithNewlines('    consumers - main    '.padStart(halfW, '='));
     logInfoWithNewlines(`${spacer}Starting consumers...`);
 
     await consumer.connect();
@@ -34,19 +34,19 @@ async function consumersMain() {
       topic: personTopicSchema.topicName,
     });
 
-    logInfoWithNewlines('    Waiting for messages...'.padStart(80, '?'));
+    logInfoWithNewlines('    Waiting for messages...'.padStart(halfW, '?'));
 
     await consumer.run({
       eachMessage: async ({ message, partition, topic }: EachMessagePayload) => {
-        logInfoWithNewlines(`    Consumer received message!    `.padStart(60, '-').padEnd(120, '-'));
+        logInfoWithNewlines(`    Consumer received message!    `.padStart(halfW, '-').padEnd(fullW, '-'));
         consumersLogger.info(`TOPIC : ${topic} [PARTITION : ${partition} | OFFSET : ${message.offset}] / ${message.timestamp}`);
-        // logInfoWithNewlines('    Full message:    '.padStart(60, '|').padEnd(120, '|'));
+        // logInfoWithNewlines('    Full message:    '.padStart(halfW, '|').padEnd(fullW, '|'));
         // consumersLogger.info(util.inspect(message, { colors: true, depth: 2 }));
         logInfoWithNewlines(`Message value: ${message.value.toString()}`);
       },
     });
   } catch (e) {
-    consumersLogger.error(`   ERROR in main    `.padStart(60, '!').padEnd(120, '!'));
+    consumersLogger.error(`   ERROR in main    `.padStart(halfW, '!').padEnd(fullW, '!'));
     consumersLogger.error(e);
 
     if (consumer != null && typeof consumer.disconnect === 'function') {
@@ -59,14 +59,14 @@ async function consumersMain() {
 };
 
 consumersMain().catch(async (e) => {
-  consumersLogger.error('    SOMETHING WENT BOOM    '.padStart(50, '!').padEnd(75, '!'));
+  consumersLogger.error('    SOMETHING WENT BOOM    '.padStart(halfW, '!').padEnd(fullW, '!'));
   consumersLogger.error(e);
 
   if (consumer != null) {
     await consumer.disconnect();
   }
 
-  consumersLogger.info(''.padStart(110, '='));
+  consumersLogger.info(''.padStart(fullW, '='));
   process.exit(1);
 });
 

@@ -63,7 +63,19 @@ for (const key in Services) {
 
 const { loggers } = winston;
 
+const windowWidth = process.stdout.columns || 160;
+/** @description Full width for padding values, adusted for prefix added by `primaryFormat` logger formatter */
+const adjustedWindowWidth = (windowWidth) - 80;
+const fullW = adjustedWindowWidth;
+const halfW = Math.round(adjustedWindowWidth / 2);
+
 const spacer = ''.padStart(24, ' ');
 
-export { logger as rootLogger, loggers, spacer };
+export {
+  logger as rootLogger,
+  fullW,
+  halfW,
+  loggers,
+  spacer,
+};
 export default logger;

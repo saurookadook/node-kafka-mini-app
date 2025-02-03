@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { topicSchemas, type PersonTopicRecord } from '@/_schemas/register-schemas';
 import { getMiniAppKafkaProducer } from '@/common/kafka-clients';
 import { Services } from '@/constants';
-import { loggers, spacer } from '@/utils';
+import { fullW, halfW, loggers, spacer } from '@/utils';
 
 const producersLogger = loggers.get(Services.PRODUCERS);
 
@@ -44,9 +44,9 @@ async function randomDelay() {
 }
 
 async function intermittentlyProduceMessages() {
-  logInfoWithNewlines(`    begin - intermittentlyProduceMessages @ ${Date.now()}`.padStart(100, '-'));
+  logInfoWithNewlines(`    begin - intermittentlyProduceMessages @ ${Date.now()}`.padStart(halfW, '-'));
   const recordKey = global.crypto.randomUUID();
-  logInfoWithNewlines(`recordKey: ${recordKey}`);
+  logInfoWithNewlines(`${spacer}recordKey: ${recordKey}`);
   const personRecord = generateRandomPerson();
   producersLogger.info(util.inspect(personRecord, { colors: true, depth: null }));
 
@@ -55,12 +55,12 @@ async function intermittentlyProduceMessages() {
     value: JSON.stringify(personRecord),
   };
 
-  logInfoWithNewlines(`    Producing message for key '${recordKey}'...`.padStart(100, '?'));
+  logInfoWithNewlines(`    Producing message for key '${recordKey}'...`.padStart(halfW, '?'));
   await producer.send({
     topic: personTopicSchema.topicName,
     messages: [outgoingMessage],
   });
-  logInfoWithNewlines(`    Success! Produced message for key '${recordKey}' :D`.padStart(100, '!'));
+  logInfoWithNewlines(`    Success! Produced message for key '${recordKey}' :D`.padStart(halfW, '!'));
 
   await randomDelay();
 
@@ -70,11 +70,11 @@ async function intermittentlyProduceMessages() {
 async function producersMain() {
   producer = await getMiniAppKafkaProducer();
 
-  logInfoWithNewlines('    producers - main    '.padStart(80, '='));
+  logInfoWithNewlines('    producers - main    '.padStart(halfW, '=').padEnd(fullW, '='));
   logInfoWithNewlines(`${spacer}Starting producers...`);
 
   await producer.connect().catch((e) => {
-    producersLogger.error('    ERROR opening producer connection    '.padStart(60, '!').padEnd(120, '!'));
+    producersLogger.error('    ERROR opening producer connection    '.padStart(halfW, '!').padEnd(fullW, '!'));
     producersLogger.error(e);
   });
 
@@ -82,18 +82,18 @@ async function producersMain() {
     try {
       await intermittentlyProduceMessages();
     } catch (e) {
-      producersLogger.error('    Error during producing    '.padStart(50, '!').padEnd(75, '!'));
+      producersLogger.error('    Error during producing    '.padStart(halfW, '!').padEnd(fullW, '!'));
       producersLogger.error(e);
       producer.disconnect();
       producer = null;
     }
   }
 
-  logInfoWithNewlines(`    Producers shutting down...`.padStart(60, '=').padEnd(120, '='));
+  logInfoWithNewlines(`    Producers shutting down...`.padStart(halfW, '=').padEnd(fullW, '='));
 };
 
 producersMain().catch(async (e) => {
-  producersLogger.error('    SOMETHING WENT BOOM    '.padStart(50, '!').padEnd(75, '!'));
+  producersLogger.error('    SOMETHING WENT BOOM    '.padStart(halfW, '!').padEnd(fullW, '!'));
   producersLogger.error(e);
 
   if (producer != null) {
