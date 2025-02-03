@@ -4,26 +4,16 @@ services:
     command: sh -C "echo start"
     platform: linux/amd64
     depends_on:
-      # - consumers
-      # - producers
+      - all-kafka
+      - consumers
       - mini-app
-      # - zookeeper
-      # - broker-1
-      # - broker-2
-      # - broker-3
-      # - rest-proxy
-      # - schema-registry
+      - producers
 
   all-kafka:
     image: alpine
     command: sh -C "echo start"
     platform: linux/amd64
     depends_on:
-      # - zookeeper
-      # - kafka-broker-1
-      # - broker-1
-      # - broker-2
-      # - broker-3
       - rest-proxy
       - schema-registry
 
