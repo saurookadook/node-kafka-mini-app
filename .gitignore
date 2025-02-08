@@ -13,6 +13,7 @@
 #!.yarn/cache
 .pnp.*
 
+.quick-refs/*
 dist
 **/dist
 node_modules
