@@ -130,7 +130,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./db:/opt/db/scripts
+      # - ./db:/opt/db/scripts
       - db_volume:/var/lib/postgresql/data
 
   consumers:
@@ -177,3 +177,6 @@ services:
     volumes:
       - ./app:/opt/mini-app
       - /opt/mini-app/node_modules
+
+volumes:
+  db_volume:
