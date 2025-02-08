@@ -10,6 +10,10 @@
     },
     "scripts": {
         "build": "webpack",
+        "knex:base": "docker compose run --rm --remove-orphans db-migrations knex --knexfile ./src/db/knexfile.ts --esm",
+        "knex:esm": "node --loader ts-node/esm ./node_modules/.bin/knex",
+        "knex:migrations-base": "yarn knex migrate:make -x ts --knexfile ./src/db/knexfile.ts --esm --migrations-directory ./src/db/migrations/",
+        "knex:migrate-make": "yarn knex:esm migrate:make -x ts --knexfile ./src/db/knexfile.ts --esm --migrations-directory ./src/db/migrations/",
         "start:dev-base": "NODE_PATH=. nodemon -e ts,json --exec node --experimental-specifier-resolution=node --loader ./customTSNodeLoader.js",
         "start:consumers:dev": "yarn start:dev-base ./src/consumers/index.ts",
         "start:consumers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/consumers.ts",
@@ -26,8 +30,7 @@
         "@kafkajs/confluent-schema-registry": "^3.6.1",
         "kafkajs": "^2.2.4",
         "knex": "^3.1.0",
-        "pg": "^8.13.1",
-        "ts-node": "^10.9.2"
+        "pg": "^8.13.1"
     },
     "devDependencies": {
         "@types/pg": "^8",
@@ -37,6 +40,7 @@
         "prettier": "^3.4.2",
         "prettier-eslint": "^16.3.0",
         "ts-loader": "^9.5.2",
+        "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
         "typescript": "~5.6.2",
         "typescript-eslint": "^8.21.0",
