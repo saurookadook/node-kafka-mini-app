@@ -1,6 +1,6 @@
 # `node-kafka-mini-app`
 
-A mini app in Node.js utilizing [KafkaJS](https://kafka.js.org/docs/getting-started) and PostgreSQL via [Postgres.js](https://github.com/porsager/postgres) _(maybe...?)_
+A mini app in Node.js utilizing [KafkaJS](https://kafka.js.org/docs/getting-started) and [PostgreSQL](https://www.postgresql.org/) via [`node-postgres`](https://github.com/brianc/node-postgres) and [Knex.js](https://knexjs.org/)
 
 ![Demo running producers and consumers](./mini-demo.gif)
 
@@ -46,5 +46,9 @@ $ docker compose up producers -d && docker compose logs producers --follow
 
 ## References
 
-- [Confluent's JavaScript Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-javascript)
-- [Confluent's JavaScript Client for Apache Kafka<sup>TM</sup>](https://github.com/confluentinc/confluent-kafka-javascript)
+- [KafkaJS](https://kafka.js.org/docs/getting-started)
+- [PostgreSQL](https://www.postgresql.org/)
+- [`node-postgres`](https://github.com/brianc/node-postgres)
+- [Knex.js](https://knexjs.org/)
+- [~Confluent's JavaScript Client for Apache Kafka~](https://github.com/confluentinc/confluent-kafka-javascript)
+- [~Confluent's JavaScript Client for Apache Kafka<sup>TM</sup>~](https://github.com/confluentinc/confluent-kafka-javascript)
