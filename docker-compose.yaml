@@ -121,12 +121,25 @@ services:
       # SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
       # SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: 2
 
+  postgres-db:
+    image: postgres:16.2-bullseye # higher than this?
+    env_file: .env
+    environment:
+      POSTGRES_PASSWORD: example
+    # platform: linux/amd64
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db:/opt/db/scripts
+      - db_volume:/var/lib/postgresql/data
+
   consumers:
     build:
       context: .
       dockerfile: app/Dockerfile
       target: consumers-dev
     depends_on:
+      - postgres-db
       - rest-proxy
       - schema-registry
     ports:
@@ -141,6 +154,7 @@ services:
       dockerfile: app/Dockerfile
       target: mini-app-dev
     depends_on:
+      - postgres-db
       - rest-proxy
       - schema-registry
     ports:
@@ -155,6 +169,7 @@ services:
       dockerfile: app/Dockerfile
       target: producers-dev
     depends_on:
+      - postgres-db
       - rest-proxy
       - schema-registry
     ports:

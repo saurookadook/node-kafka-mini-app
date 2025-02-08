@@ -19,6 +19,14 @@
         "start:producers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/producers.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
+    "dependencies": {
+        "@confluentinc/kafka-javascript": "^1.2.0",
+        "@confluentinc/schemaregistry": "^1.1.0",
+        "@faker-js/faker": "^9.4.0",
+        "@kafkajs/confluent-schema-registry": "^3.6.1",
+        "kafkajs": "^2.2.4",
+        "ts-node": "^10.9.2"
+    },
     "devDependencies": {
         "eslint": "^9.19.0",
         "globals": "^15.14.0",
@@ -32,13 +40,5 @@
         "webpack": "^5.97.1",
         "webpack-cli": "^6.0.1",
         "winston": "^3.17.0"
-    },
-    "dependencies": {
-        "@confluentinc/kafka-javascript": "^1.2.0",
-        "@confluentinc/schemaregistry": "^1.1.0",
-        "@faker-js/faker": "^9.4.0",
-        "@kafkajs/confluent-schema-registry": "^3.6.1",
-        "kafkajs": "^2.2.4",
-        "ts-node": "^10.9.2"
     }
 }
