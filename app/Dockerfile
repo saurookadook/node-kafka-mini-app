@@ -21,6 +21,9 @@ USER miniapp
 WORKDIR /opt/mini-app
 COPY --from=packages-dev /opt/build/node_modules /opt/mini-app/node_modules
 
+FROM build-dev AS db-migrations-dev
+ENTRYPOINT [ "corepack", "yarn", "knex:esm" ]
+
 FROM build-dev AS consumers-dev
 EXPOSE 9339
 ENTRYPOINT [ "corepack", "yarn", "start:consumers:dev" ]
