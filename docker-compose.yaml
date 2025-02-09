@@ -133,6 +133,17 @@ services:
       # - ./db:/opt/db/scripts
       - db_volume:/var/lib/postgresql/data
 
+  db-migrations:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      target: db-migrations-dev
+    depends_on:
+      - postgres-db
+    volumes:
+      - ./app:/opt/mini-app
+      - /opt/mini-app/node_modules
+
   consumers:
     build:
       context: .
