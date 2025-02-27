@@ -122,13 +122,16 @@ services:
       # SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: 2
 
   postgres-db:
-    image: postgres:16.2-bullseye # higher than this?
+    build:
+      context: .
+      dockerfile: db/Dockerfile
+      target: postgres-dev
     env_file: .env
     environment:
       POSTGRES_PASSWORD: example
     # platform: linux/amd64
     ports:
-      - 5432:5432
+      - 5435:5432
     volumes:
       # - ./db:/opt/db/scripts
       - db_volume:/var/lib/postgresql/data
