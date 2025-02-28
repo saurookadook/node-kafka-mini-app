@@ -1,9 +1,15 @@
 import type { Knex } from 'knex';
 
 export const up = (knex: Knex) => {
-  // TODO: implement me! :D
+  return knex.schema.createTable('random_people', function(table) {
+    table.uuid('id', { primaryKey: true }).defaultTo(knex.fn.uuid());
+    table.string('first_name');
+    table.string('last_name');
+    table.integer('age');
+    table.timestamp('birth_date', { useTz: true }).defaultTo(knex.fn.now());
+  });
 };
 
 export const down = (knex: Knex) => {
-  // TODO: implement me! :D
+  return knex.schema.dropTable('random_people');
 };

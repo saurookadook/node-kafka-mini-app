@@ -1,18 +1,47 @@
+import path from 'node:path';
+import util from 'node:util';
+
+import dotenv from 'dotenv';
 import type { Knex } from "knex";
+
+// TODO: not sure why this import isn't being resolved correctly :']
+// import { fullW, halfW } from '@/utils/logger';
+const halfW = process.stdout.columns / 2;
+const fullW = process.stdout.columns;
+
+const __dirname = path.resolve();
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+function logCentered(text: string): void {
+  console.log(`    ${text}    `.padStart(halfW, '=').padEnd(fullW, '='));
+}
 
 // https://knexjs.org/guide/migrations.html#migration-cli
 // using CLI
 // - https://github.com/knex/knex/issues/4793#issuecomment-1136127506
 // - https://github.com/knex/knex/issues/4793#issuecomment-1876258280
 
+logCentered('process.env');
+console.log(util.inspect(process.env, { colors: true, depth: null }), '\n');
+
 const isTest = process.env.NODE_ENV === 'test';
 
+// TODO: trying to use type `Knex.Config` throws errors?
 const commonKnexConfig = {
   client: 'pg',
-  // connetion: {
-  //   host: process.env.PG_HOST,
-  //   database: isTest ? process.env.PG_TEST_DATABASE_NAME : process.env.PG_DATABASE_NAME,
-  // },
+  connection:
+  // process.env.PSQL_CONNECTION ||
+  {
+    database: isTest ? process.env.POSTGRES_DB_TEST : process.env.POSTGRES_DB,
+    // host: process.env.POSTGRES_HOST,
+    host: 'localhost',
+    password: process.env.POSTGRES_PASSWORD,
+    port: Number(process.env.POSTGRES_PORT),
+    user: process.env.POSTGRES_USER,
+    // user: process.env.POSTGRES_APP_USER,
+    rejectUnauthorized: false,
+  },
   extension: 'ts',
   migrations: {
     getNewMigrationName: (name: string) => {
@@ -27,6 +56,9 @@ const commonKnexConfig = {
   },
 };
 
+logCentered('commonKnexConfig');
+console.log(util.inspect(commonKnexConfig, { colors: true, depth: null }), '\n');
+
 type KnexMigrationConfig = {
   [key: string]: Knex.Config;
 }
@@ -35,9 +67,10 @@ const config: KnexMigrationConfig = {
   development: {
     ...commonKnexConfig,
     connection: {
-      database: process.env.POSTGRES_DB,
-      user: process.env.POSTGRES_MIGRATIONS_USER,
-      password: process.env.POSTGRES_PASSWORD,
+      ...commonKnexConfig.connection,
+      // database: process.env.POSTGRES_DB,
+      // user: process.env.POSTGRES_MIGRATIONS_USER,
+      // password: process.env.POSTGRES_PASSWORD,
     },
     pool: {
       min: 2,
@@ -79,4 +112,5 @@ const config: KnexMigrationConfig = {
 
 };
 
+export { commonKnexConfig };
 export default config;
