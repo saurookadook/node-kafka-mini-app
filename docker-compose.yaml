@@ -126,12 +126,13 @@ services:
       context: .
       dockerfile: db/Dockerfile
       target: postgres-dev
+    container_name: postgres-db
     env_file: .env
     environment:
       POSTGRES_PASSWORD: example
     # platform: linux/amd64
     ports:
-      - 5435:5432
+      - 5435:5435
     volumes:
       # - ./db:/opt/db/scripts
       - db_volume:/var/lib/postgresql/data
@@ -141,6 +142,7 @@ services:
       context: .
       dockerfile: app/Dockerfile
       target: db-migrations-dev
+    env_file: .env
     depends_on:
       - postgres-db
     volumes:

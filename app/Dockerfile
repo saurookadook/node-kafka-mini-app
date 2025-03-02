@@ -12,8 +12,6 @@ COPY ./app/src ./
 RUN $yarn install
 
 FROM node:22-bullseye AS build-dev
-ENV YARN_VERSION 4.6.0
-ENV yarn='corepack yarn'
 RUN useradd --uid 2000 miniapp -m
 RUN mkdir -p /opt/mini-app/node_modules
 RUN chown -R miniapp:miniapp /opt/mini-app/node_modules
@@ -21,8 +19,11 @@ USER miniapp
 WORKDIR /opt/mini-app
 COPY --from=packages-dev /opt/build/node_modules /opt/mini-app/node_modules
 
+###### TODO: I'd love if this would work
 FROM build-dev AS db-migrations-dev
-ENTRYPOINT [ "corepack", "yarn", "knex:esm" ]
+ENV YARN_VERSION 4.6.0
+ENTRYPOINT [ "corepack", "yarn" ]
+CMD []
 
 FROM build-dev AS consumers-dev
 EXPOSE 9339
