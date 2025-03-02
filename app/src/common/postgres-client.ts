@@ -1,6 +1,6 @@
 import knex from 'knex';
 
-import { commonKnexConfig } from '../knexfile';
+import { commonKnexConfig } from '@/db/knexfile';
 
 const postgresClient = knex({
   client: 'pg',
