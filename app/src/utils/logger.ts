@@ -51,17 +51,13 @@ for (const key in Services) {
   });
 }
 
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
-// if (process.env.NODE_ENV !== 'production') {
-//   logger.add(new transports.Console({
-//     format: winston.format.simple(),
-//   }));
-// }
-
 const { loggers } = winston;
+
+function logInfoWithNewlines(message: string, loggerRef: winston.Logger = logger) {
+  loggerRef.info('\n');
+  loggerRef.info(message);
+  loggerRef.info('\n');
+}
 
 const windowWidth = process.stdout.columns || 160;
 /** @description Full width for padding values, adusted for prefix added by `primaryFormat` logger formatter */
@@ -76,6 +72,7 @@ export {
   fullW,
   halfW,
   loggers,
+  logInfoWithNewlines,
   spacer,
 };
 export default logger;
