@@ -13,6 +13,7 @@ type MessageSchema = {
   fields: Array<{
     name: string;
     type: string;
+    logicalType?: string;
   }>;
 }
 
@@ -25,9 +26,9 @@ type TopicSchemaItem = {
 type TopicSchemas = TopicSchemaItem[];
 
 export type PersonTopicRecord = {
+  id: ReturnType<typeof crypto.randomUUID>;
   firstName: string;
   lastName: string;
-  age: number;
   birthDate: number;
 }
 
@@ -48,16 +49,17 @@ export const topicSchemas: TopicSchemas = [
       name: 'Person',
       fields: [
         {
+          name: 'id',
+          type: 'string',
+          logicalType: 'uuid',
+        },
+        {
           name: 'firstName',
           type: 'string',
         },
         {
           name: 'lastName',
           type: 'string',
-        },
-        {
-          name: 'age',
-          type: 'int',
         },
         {
           name: 'birthDate',
