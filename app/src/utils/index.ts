@@ -16,7 +16,7 @@ export function generateRandomPerson(): PersonTopicRecord & { age: number } {
   const birthDate = faker.date.birthdate();
 
   return {
-    id: crypto.randomUUID(),
+    id: global.crypto.randomUUID(),
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     age: calculateAge(birthDate),

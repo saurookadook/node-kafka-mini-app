@@ -26,10 +26,10 @@ const localLogInfo = (message: string) => {
 
 async function intermittentlyProduceMessages() {
   localLogInfo(`    begin - intermittentlyProduceMessages @ ${Date.now()}`.padStart(halfW, '-'));
-  const recordKey = global.crypto.randomUUID();
-  localLogInfo(`${spacer}recordKey: ${recordKey}`);
   const personRecord = generateRandomPerson();
   producersLogger.info(util.inspect(personRecord, { colors: true, depth: null }));
+
+  const { id: recordKey } = personRecord;
 
   const outgoingMessage = {
     key: recordKey,
