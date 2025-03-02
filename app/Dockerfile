@@ -36,3 +36,7 @@ ENTRYPOINT [ "corepack", "yarn", "start:mini-app:dev" ]
 FROM build-dev AS producers-dev
 EXPOSE 9338
 ENTRYPOINT [ "corepack", "yarn", "start:producers:dev" ]
+
+FROM build-dev AS register-schemas-dev
+EXPOSE 9336
+ENTRYPOINT [ "corepack", "yarn", "start:register-schemas:dev" ]

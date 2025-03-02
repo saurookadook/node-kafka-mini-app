@@ -18,11 +18,13 @@
         "knex-migrate-list": "yarn knex:esm migrate:list --knexfile ./src/db/knexfile.ts",
         "start:dev-base": "NODE_PATH=. nodemon -e ts,json --exec node --experimental-specifier-resolution=node --loader ./customTSNodeLoader.js",
         "start:consumers:dev": "yarn start:dev-base ./src/consumers/index.ts",
-        "start:consumers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/consumers.ts",
+        "start:consumers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/consumers.js",
         "start:mini-app:dev": "yarn start:dev-base src/mini-app/index.ts",
-        "start:mini-app": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/mini-app.ts",
+        "start:mini-app": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/mini-app.js",
         "start:producers:dev": "yarn start:dev-base ./src/producers/index.ts",
-        "start:producers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/producers.ts",
+        "start:producers": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/producers.js",
+        "start:register-schemas:dev": "yarn start:dev-base ./src/_schemas/register-schemas.ts",
+        "start:register-schemas": "yarn tsc -b --verbose && NODE_PATH=. node ./dist/_schemas/register-schemas.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {

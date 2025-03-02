@@ -194,5 +194,20 @@ services:
       - ./app:/opt/mini-app
       - /opt/mini-app/node_modules
 
+  register-schemas:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      target: register-schemas-dev
+    depends_on:
+      - postgres-db
+      - rest-proxy
+      - schema-registry
+    ports:
+      - 9336:9336
+    volumes:
+      - ./app:/opt/mini-app
+      - /opt/mini-app/node_modules
+
 volumes:
   db_volume:

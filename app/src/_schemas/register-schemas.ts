@@ -3,8 +3,10 @@ import { SchemaType } from '@kafkajs/confluent-schema-registry';
 import { AvroConfluentSchema, RawAvroSchema } from '@kafkajs/confluent-schema-registry/dist/@types';
 
 import { getMiniAppSchemaRegistry } from '@/common/kafka-clients';
-import { ConsumerGroups } from '@/constants';
-import logger from '@/utils/logger';
+import { ConsumerGroups, Services } from '@/constants';
+import { loggers } from '@/utils';
+
+const schemaRegistryLogger = loggers.get(Services.MINI_APP);
 
 type MessageSchema = {
   type: string;
@@ -73,7 +75,7 @@ export const topicSchemas: TopicSchemas = [
 export const registerSchemas = async (schemas: TopicSchemas = topicSchemas) => {
   const { subjectName, messageSchema } = schemas[0];
 
-  logger.info(`Registering schema for topic '${subjectName}'`);
+  schemaRegistryLogger.info(`Registering schema for topic '${subjectName}'`);
   // const id = await schemaRegistry.register(
   //   subjectName,
   //   {
@@ -81,7 +83,7 @@ export const registerSchemas = async (schemas: TopicSchemas = topicSchemas) => {
   //     schema: JSON.stringify(messageSchema),
   //   },
   // ).catch((e) => {
-  //   logger.error(`Failed to register schema for topic '${subjectName}'\n`, e);
+  //   schemaRegistryLogger.error(`Failed to register schema for topic '${subjectName}'\n`, e);
   //   return e;
   // });
 
@@ -102,7 +104,7 @@ export const registerSchemas = async (schemas: TopicSchemas = topicSchemas) => {
     const id = await miniAppSchemaRegistry
       .register(...registerArgs)
       .catch((e) => {
-        logger.error(`[miniAppSchemaRegistry.register] Failed to register schema for topic '${subjectName}'\n`, e);
+        schemaRegistryLogger.error(`[miniAppSchemaRegistry.register] Failed to register schema for topic '${subjectName}'\n`, e);
         return e;
       });
 
@@ -110,21 +112,25 @@ export const registerSchemas = async (schemas: TopicSchemas = topicSchemas) => {
         throw id;
       }
 
-      logger.info(`Topic '${subjectName}' registration successful!`, ` ID: ${id}`);
+      schemaRegistryLogger.info(`Topic '${subjectName}' registration successful!`, ` ID: ${id}`);
   } catch (error) {
-    logger.error(`[registerSchemas] Failed while registering schemas: \n`, error);
+    schemaRegistryLogger.error(`[registerSchemas] Failed while registering schemas: \n`, error);
   }
 };
 
-export default registerSchemas;
+async function main() {
+  console.log('\n');
+  console.log('    mini-app - main    '.padStart(100, '=').padEnd(180, '='));
+  console.log('\n');
 
-// registerSchemas().catch(async (e) => {
-//   console.error(e);
-//   // consumer && await consumer.disconnect();
-//   // producer && await producer.disconnect();
+  await registerSchemas().catch(async (e) => {
+    schemaRegistryLogger.error(e);
+  });
 
-// })
-//   .finally(() => {
-//     logger.info('');
-//     process.exit(1);
-//   });
+  schemaRegistryLogger.info('Finished registering schemas!');
+}
+
+main().finally(() => {
+  schemaRegistryLogger.info("Shutting down 'mini-app'...");
+  process.exit(1);
+});
