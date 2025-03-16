@@ -5,7 +5,6 @@ export const up = (knex: Knex) => {
     table.uuid('id', { primaryKey: true }).defaultTo(knex.fn.uuid());
     table.string('first_name');
     table.string('last_name');
-    table.integer('age');
     table.timestamp('birth_date', { useTz: true }).defaultTo(knex.fn.now());
   });
 };
