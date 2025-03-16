@@ -93,6 +93,7 @@ export default tseslint.config(
       ..._rules,
       '@typescript-eslint/ban-ts-comment': 1,
       '@typescript-eslint/no-explicit-any': 1,
+      '@typescript-eslint/no-unused-vars': 1,
       'indent': [0, 2],
     },
   },
