@@ -29,19 +29,19 @@ async function intermittentlyProduceMessages() {
   const personRecord = generateRandomPerson();
   producersLogger.info(util.inspect(personRecord, { colors: true, depth: null }));
 
-  const { id: recordKey } = personRecord;
+  const { age, ...personTopicRecord } = personRecord;
 
   const outgoingMessage = {
-    key: recordKey,
-    value: JSON.stringify(personRecord),
+    key: personTopicRecord.id,
+    value: JSON.stringify(personTopicRecord),
   };
 
-  localLogInfo(`    Producing message for key '${recordKey}'...`.padStart(halfW, '?'));
+  localLogInfo(`    Producing message for key '${personTopicRecord.id}'...`.padStart(halfW, '?'));
   await producer.send({
     topic: personTopicSchema.topicName,
     messages: [outgoingMessage],
   });
-  localLogInfo(`    Success! Produced message for key '${recordKey}' :D`.padStart(halfW, '!'));
+  localLogInfo(`    Success! Produced message for key '${personTopicRecord.id}' :D`.padStart(halfW, '!'));
 
   await randomDelay();
 
