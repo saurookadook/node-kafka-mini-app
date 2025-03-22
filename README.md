@@ -12,7 +12,7 @@ $ nvm use # if this fails, run `nvm install`
 $ corepack enable
 $ yarn install
 $ cd ..
-$ docker compose build all --no-cache
+$ docker compose up all --build -d
 ```
 
 ## Runnin' the Containers

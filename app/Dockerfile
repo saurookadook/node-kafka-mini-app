@@ -26,17 +26,21 @@ ENTRYPOINT [ "corepack", "yarn" ]
 CMD []
 
 FROM build-dev AS consumers-dev
+ENV YARN_VERSION 4.6.0
 EXPOSE 9339
 ENTRYPOINT [ "corepack", "yarn", "start:consumers:dev" ]
 
 FROM build-dev AS mini-app-dev
+ENV YARN_VERSION 4.6.0
 EXPOSE 9337
 ENTRYPOINT [ "corepack", "yarn", "start:mini-app:dev" ]
 
 FROM build-dev AS producers-dev
+ENV YARN_VERSION 4.6.0
 EXPOSE 9338
 ENTRYPOINT [ "corepack", "yarn", "start:producers:dev" ]
 
 FROM build-dev AS register-schemas-dev
+ENV YARN_VERSION 4.6.0
 EXPOSE 9336
 ENTRYPOINT [ "corepack", "yarn", "start:register-schemas:dev" ]
