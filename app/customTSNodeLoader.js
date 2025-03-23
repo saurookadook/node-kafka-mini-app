@@ -1,8 +1,3 @@
-// import { register } from "node:module";
-// import { pathToFileURL } from "node:url";
-// register('ts-node/esm', pathToFileURL('./'));
-/*~ NOTE: ^ this doesn't seem to work with TS aliases :/ ~*/
-
 // from https://github.com/TypeStrong/ts-node/discussions/1450#discussioncomment-1806115
 // see also https://github.com/TypeStrong/ts-node/discussions/1450#discussion-3563207
 

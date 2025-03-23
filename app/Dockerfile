@@ -2,6 +2,7 @@ FROM node:22-bullseye AS packages-dev
 ENV YARN_VERSION 4.6.0
 ENV yarn='corepack yarn'
 WORKDIR /opt/build
+COPY ./.env ./
 COPY ./app/.yarnrc.yml ./
 COPY ./app/customTSNodeLoader.js ./
 COPY ./app/nodemon.json ./
@@ -23,6 +24,21 @@ COPY --from=packages-dev /opt/build/node_modules /opt/mini-app/node_modules
 FROM build-dev AS db-migrations-dev
 ENV YARN_VERSION 4.6.0
 ENTRYPOINT [ "corepack", "yarn" ]
+CMD []
+
+FROM build-dev AS db-migrations-up-dev
+ENV YARN_VERSION 4.6.0
+ENTRYPOINT [ "corepack", "yarn", "knex-migrate-up" ]
+CMD []
+
+FROM build-dev AS db-migrations-down-dev
+ENV YARN_VERSION 4.6.0
+ENTRYPOINT [ "corepack", "yarn", "knex-migrate-down" ]
+CMD []
+
+FROM build-dev AS db-migrations-list-dev
+ENV YARN_VERSION 4.6.0
+ENTRYPOINT [ "corepack", "yarn", "knex-migrate-list" ]
 CMD []
 
 FROM build-dev AS consumers-dev

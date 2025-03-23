@@ -11,7 +11,7 @@
     "scripts": {
         "build": "webpack",
         "knex:base": "docker compose run --rm --remove-orphans db-migrations",
-        "knex:esm": "NODE_OPTIONS=\"--import ./customTSNodeLoader.js\" knex",
+        "knex:esm": "NODE_OPTIONS=\"--import ./knexTSLoader.js\" knex",
         "knex-migrate-make": "yarn knex:esm migrate:make -x ts --knexfile ./src/db/knexfile.ts",
         "knex-migrate-up": "yarn knex:esm migrate:up --knexfile ./src/db/knexfile.ts",
         "knex-migrate-down": "yarn knex:esm migrate:down --knexfile ./src/db/knexfile.ts",

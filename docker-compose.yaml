@@ -137,62 +137,61 @@ services:
       # - ./db:/opt/db/scripts
       - db_volume:/var/lib/postgresql/data
 
-  db-migrations:
+  node-common:
     build:
       context: .
       dockerfile: app/Dockerfile
-      target: db-migrations-dev
-    env_file: .env
     depends_on:
       - postgres-db
+      - rest-proxy
+      - schema-registry
+    env_file: .env
     volumes:
       - ./app:/opt/mini-app
       - /opt/mini-app/node_modules
+
+  db-migrations:
+    build:
+      target: db-migrations-dev
+    extends: node-common
+    depends_on:
+      - postgres-db
+
+  db-migrations-up:
+    build:
+      target: db-migrations-up-dev
+    extends: db-migrations
+
+  db-migrations-down:
+    build:
+      target: db-migrations-down-dev
+    extends: db-migrations
+
+  db-migrations-list:
+    build:
+      target: db-migrations-list-dev
+    extends: db-migrations
 
   consumers:
     build:
-      context: .
-      dockerfile: app/Dockerfile
       target: consumers-dev
-    depends_on:
-      - postgres-db
-      - rest-proxy
-      - schema-registry
+    extends: node-common
     ports:
       - 9339:9339
-    volumes:
-      - ./app:/opt/mini-app
-      - /opt/mini-app/node_modules
 
   mini-app:
     build:
-      context: .
-      dockerfile: app/Dockerfile
       target: mini-app-dev
-    depends_on:
-      - postgres-db
-      - rest-proxy
-      - schema-registry
+    extends: node-common
     ports:
       - 9337:9337
-    volumes:
-      - ./app:/opt/mini-app
-      - /opt/mini-app/node_modules
 
   producers:
     build:
-      context: .
-      dockerfile: app/Dockerfile
       target: producers-dev
-    depends_on:
-      - postgres-db
-      - rest-proxy
-      - schema-registry
+    extends: node-common
     ports:
       - 9338:9338
-    volumes:
-      - ./app:/opt/mini-app
-      - /opt/mini-app/node_modules
 
   register-schemas:
     build:
