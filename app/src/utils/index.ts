@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { type PersonTopicRecord } from '@/_schemas/topics';
+import { type RandomPerson } from '@/_schemas/topics';
 import { logInfoWithNewlines, spacer } from '@/utils/logger';
 
 function calculateAge(birthDate: Date): number {
@@ -12,7 +12,7 @@ function calculateAge(birthDate: Date): number {
   return isPastBirthdate ? age : age - 1;
 }
 
-export function generateRandomPerson(): PersonTopicRecord & { age: number } {
+export function generateRandomPerson(): RandomPerson & { age: number } {
   const birthDate = faker.date.birthdate();
 
   return {

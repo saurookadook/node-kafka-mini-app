@@ -19,7 +19,7 @@ type TopicSchemaItem = {
 
 export type TopicSchemas = TopicSchemaItem[];
 
-export type PersonTopicRecord = {
+export type RandomPerson = Record<string, unknown> & {
   id: ReturnType<typeof crypto.randomUUID>;
   firstName: string;
   lastName: string;
