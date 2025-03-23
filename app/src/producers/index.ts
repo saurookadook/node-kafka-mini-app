@@ -1,7 +1,7 @@
 import util from 'node:util';
 import { Producer } from 'kafkajs';
 
-import { topicSchemas } from '@/_schemas/register-schemas';
+import { topicSchemas } from '@/_schemas/topics';
 import { getMiniAppKafkaProducer } from '@/common/kafka-clients';
 import { Services } from '@/constants';
 import {
