@@ -26,7 +26,7 @@ class RandomPerson {
     this.birthDate = new Date(record.birthDate);
   }
 
-  dbRecordMap(): RandomPersonDBRecord {
+  createDBRecordMap(): RandomPersonDBRecord {
     return {
       id: this.id,
       first_name: this.firstName,
@@ -35,6 +35,18 @@ class RandomPerson {
     };
   }
 
+  createTopicRecord(): RandomPersonRecord {
+    return {
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      birthDate: this.birthDate.getTime(),
+    };
+  }
+
+  /**
+   * @todo I'm not sure I like how this is implemented
+   */
   get age(): number {
     return RandomPerson.calculateAge(this.birthDate);
   }

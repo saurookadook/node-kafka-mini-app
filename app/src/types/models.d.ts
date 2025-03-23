@@ -17,7 +17,7 @@ export type TopicSchemaItem = {
 
 export type TopicSchemas = TopicSchemaItem[];
 
-export type RandomPerson = Record<string, unknown> & {
+export type RandomPersonRecord = Record<string, unknown> & {
   id: ReturnType<typeof crypto.randomUUID>;
   firstName: string;
   lastName: string;
@@ -25,8 +25,8 @@ export type RandomPerson = Record<string, unknown> & {
 }
 
 export type RandomPersonDBRecord = {
-  id: RandomPerson['id'];
-  first_name: RandomPerson['firstName'];
-  last_name: RandomPerson['lastName'];
+  id: RandomPersonRecord['id'];
+  first_name: RandomPersonRecord['firstName'];
+  last_name: RandomPersonRecord['lastName'];
   birth_date: ReturnType<Date['toISOString']>;
 }
