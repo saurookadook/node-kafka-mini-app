@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { type RandomPerson } from '@/_schemas/topics';
+import { type RandomPerson } from '@/types';
 import { logInfoWithNewlines, spacer } from '@/utils/logger';
 
 function calculateAge(birthDate: Date): number {

@@ -2,7 +2,7 @@ import { Consumer, EachMessagePayload } from 'kafkajs';
 // eslint-disable-next-line
 import util from 'node:util';
 
-import { topicSchemas } from '@/_schemas/register-schemas';
+import { topicSchemas } from '@/_schemas/topics';
 import { getMiniAppKafkaConsumer } from '@/common/kafka-clients';
 import { ConsumerGroups, Services } from '@/constants';
 import { fullW, halfW, loggers, spacer } from '@/utils';

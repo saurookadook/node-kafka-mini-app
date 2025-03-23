@@ -4,8 +4,9 @@ import { AvroConfluentSchema, RawAvroSchema } from '@kafkajs/confluent-schema-re
 
 import { getMiniAppSchemaRegistry } from '@/common/kafka-clients';
 import { Services } from '@/constants';
+import type { TopicSchemas } from '@/types';
 import { loggers } from '@/utils';
-import { TopicSchemas, topicSchemas } from './topics';
+import { topicSchemas } from './topics';
 
 const schemaRegistryLogger = loggers.get(Services.MINI_APP);
 

@@ -23,3 +23,10 @@ export type RandomPerson = Record<string, unknown> & {
   lastName: string;
   birthDate: number;
 }
+
+export type RandomPersonDBRecord = {
+  id: RandomPerson['id'];
+  first_name: RandomPerson['firstName'];
+  last_name: RandomPerson['lastName'];
+  birth_date: ReturnType<Date['toISOString']>;
+}

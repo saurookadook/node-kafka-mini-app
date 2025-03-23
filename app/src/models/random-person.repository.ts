@@ -1,8 +1,9 @@
 import { QueryBuilder } from "knex";
 
-import { RandomPerson, topicSchemas } from "@/_schemas/topics";
+import { topicSchemas } from "@/_schemas/topics";
 import { postgresClient } from "@/common";
 import { DBTables } from "@/constants";
+import type { RandomPerson } from "@/types";
 
 interface RepositoryOperations<T> {
   findById(id: ReturnType<typeof crypto.randomUUID>): T | QueryBuilder;
