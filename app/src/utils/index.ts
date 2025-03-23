@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { type PersonTopicRecord } from '@/_schemas/register-schemas';
+import { type PersonTopicRecord } from '@/_schemas/topics';
 import { logInfoWithNewlines, spacer } from '@/utils/logger';
 
 function calculateAge(birthDate: Date): number {
@@ -38,4 +38,5 @@ export async function randomDelay() {
   });
 }
 
+export * from '@/utils/case-converters';
 export * from '@/utils/logger';
