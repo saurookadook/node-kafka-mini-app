@@ -1,27 +1,17 @@
 import { faker } from '@faker-js/faker';
 
-import { type RandomPerson } from '@/types';
+import { RandomPerson } from '@/models';
 import { logInfoWithNewlines, spacer } from '@/utils/logger';
 
-function calculateAge(birthDate: Date): number {
-  const now = new Date();
-  const age = now.getFullYear() - birthDate.getFullYear();
-  const monthDiff = now.getMonth() - birthDate.getMonth();
-  const isPastBirthdate =
-    (monthDiff > 0 || (monthDiff === 0 && now.getDate() >= birthDate.getDate()));
-  return isPastBirthdate ? age : age - 1;
-}
-
-export function generateRandomPerson(): RandomPerson & { age: number } {
-  const birthDate = faker.date.birthdate();
-
-  return {
+export function generateRandomPerson(): RandomPerson {
+  const randomPerson = new RandomPerson({
     id: global.crypto.randomUUID(),
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
-    age: calculateAge(birthDate),
-    birthDate: birthDate.getTime(),
-  };
+    birthDate: faker.date.birthdate(),
+  });
+
+  return randomPerson;
 }
 
 const between0And5SecondsInMilli = () => (Math.random() * 5) * 1000;
