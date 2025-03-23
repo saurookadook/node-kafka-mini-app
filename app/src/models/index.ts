@@ -1,3 +1,4 @@
+import RandomPerson from "./random-person";
 import RandomPersonRepository from "./random-person.repository";
 
-export { RandomPersonRepository };
+export { RandomPerson, RandomPersonRepository };

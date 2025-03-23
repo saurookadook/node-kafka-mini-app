@@ -3,7 +3,7 @@ import { QueryBuilder } from "knex";
 import { topicSchemas } from "@/_schemas/topics";
 import { postgresClient } from "@/common";
 import { DBTables } from "@/constants";
-import type { RandomPerson } from "@/types";
+import type { RandomPersonRecord } from "@/types";
 
 interface RepositoryOperations<T> {
   findById(id: ReturnType<typeof crypto.randomUUID>): T | QueryBuilder;
@@ -13,28 +13,28 @@ interface RepositoryOperations<T> {
   deleteById(id: ReturnType<typeof crypto.randomUUID>): boolean;
 }
 
-class RandomPersonRepository implements RepositoryOperations<RandomPerson> {
+class RandomPersonRepository implements RepositoryOperations<RandomPersonRecord> {
   static dbSchema = DBTables[0];
   static topicSchema = topicSchemas[0];
 
-  id: RandomPerson['id'];
-  firstName: RandomPerson['firstName'];
-  lastName: RandomPerson['lastName'];
-  birthDate: RandomPerson['birthDate'];
+  id: RandomPersonRecord['id'];
+  firstName: RandomPersonRecord['firstName'];
+  lastName: RandomPersonRecord['lastName'];
+  birthDate: RandomPersonRecord['birthDate'];
 
 
 
-  constructor(record: RandomPerson) {
+  constructor(record: RandomPersonRecord) {
     this.id = record.id;
     this.firstName = record.firstName;
     this.lastName = record.lastName;
     this.birthDate = record.birthDate;
   }
 
-  findById(id: RandomPerson['id']) {
+  findById(id: RandomPersonRecord['id']) {
     return postgresClient
       .select('*')
-      .from<RandomPerson>(RandomPersonRepository.dbSchema.name)
+      .from<RandomPersonRecord>(RandomPersonRepository.dbSchema.name)
       .where({ id })
       .limit(1)
       .first();
@@ -43,16 +43,16 @@ class RandomPersonRepository implements RepositoryOperations<RandomPerson> {
   findAll() {
     return postgresClient
       .select('*')
-      .from<RandomPerson>(RandomPersonRepository.dbSchema.name)
+      .from<RandomPersonRecord>(RandomPersonRepository.dbSchema.name)
       .limit(20);
   }
 
-  save(entity: RandomPerson): RandomPerson {
+  save(entity: RandomPersonRecord): RandomPersonRecord {
     console.warn('[RandomPersonRepository.save] IMPLEMENT ME! :D');
     return entity;
   }
 
-  update(entity: RandomPerson): RandomPerson {
+  update(entity: RandomPersonRecord): RandomPersonRecord {
     console.warn('[RandomPersonRepository.update] IMPLEMENT ME! :D');
     return entity;
   }

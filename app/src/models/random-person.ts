@@ -1,21 +1,29 @@
 import { topicSchemas } from "@/_schemas/topics";
 import { DBTables } from "@/constants";
-import type { RandomPerson, RandomPersonDBRecord } from "@/types";
+import type { RandomPersonRecord, RandomPersonDBRecord } from "@/types";
 
-class RandomPersonFactory {
+// TODO: not sure why `Omit<RandomPerson, 'birthDate'>` isn't including the other properties
+type ConstructorArgs = {
+  id: RandomPersonRecord['id'];
+  firstName: RandomPersonRecord['firstName'];
+  lastName: RandomPersonRecord['lastName'];
+  birthDate: Date | number | string
+};
+
+class RandomPerson {
   static dbSchema = DBTables[0];
   static topicSchema = topicSchemas[0];
 
-  id: RandomPerson['id'];
-  firstName: RandomPerson['firstName'];
-  lastName: RandomPerson['lastName'];
-  birthDate: RandomPerson['birthDate'];
+  id: RandomPersonRecord['id'];
+  firstName: RandomPersonRecord['firstName'];
+  lastName: RandomPersonRecord['lastName'];
+  birthDate: Date;
 
-  constructor(record: RandomPerson) {
+  constructor(record: ConstructorArgs) {
     this.id = record.id;
     this.firstName = record.firstName;
     this.lastName = record.lastName;
-    this.birthDate = record.birthDate;
+    this.birthDate = new Date(record.birthDate);
   }
 
   dbRecordMap(): RandomPersonDBRecord {
@@ -26,6 +34,19 @@ class RandomPersonFactory {
       birth_date: new Date(this.birthDate).toISOString(),
     };
   }
+
+  get age(): number {
+    return RandomPerson.calculateAge(this.birthDate);
+  }
+
+  static calculateAge(birthDate: Date): number {
+    const now = new Date();
+    const age = now.getFullYear() - birthDate.getFullYear();
+    const monthDiff = now.getMonth() - birthDate.getMonth();
+    const isPastBirthdate =
+      (monthDiff > 0 || (monthDiff === 0 && now.getDate() >= birthDate.getDate()));
+    return isPastBirthdate ? age : age - 1;
+  }
 }
 
-export default RandomPersonFactory;
+export default RandomPerson;
