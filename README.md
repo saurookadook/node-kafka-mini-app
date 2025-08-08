@@ -1,6 +1,8 @@
 # `node-kafka-mini-app`
 
-A mini app in Node.js utilizing [KafkaJS](https://kafka.js.org/docs/getting-started) and PostgreSQL via [Postgres.js](https://github.com/porsager/postgres) _(maybe...?)_
+A mini app in Node.js utilizing [KafkaJS](https://kafka.js.org/docs/getting-started).
+
+- _**Coming Soon**: Replicating Topics to tables in PostgreSQL via [Postgres.js](https://github.com/porsager/postgres) (or maybe a different library?)_
 
 ![Demo running producers and consumers](./mini-demo.gif)
 
